@@ -7,11 +7,11 @@ import java.util.ArrayList;
  * Created by Thew on 10/16/2016.
  */
 public class Room {
-    private RoomType type;  // the current known Type for this Room
-    private int xPosition;    // set x-position of this Room in world
-    private int yPosition;    // set y-position of this Room in world
+    private RoomType type; // the current known Type for this Room
+    private int xPosition; // set x-position of this Room in world
+    private int yPosition; // set y-position of this Room in world
     private final List<RoomType> possibleTypes; // possible Types that might apply to this Room
-    private final List<Percept> percepts;   // all current percepts for this given room
+    private final List<Percept> percepts; // all current percepts for this given room
 
     public Room(int x, int y) {
         this.xPosition = x;
