@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
- * Created by Thew on 10/16/2016.
+ * Created by Mathew Gostnell on 10/16/2016.
  */
 public class Generator {
     private Room[][] world;
@@ -95,16 +95,18 @@ public class Generator {
     }
 
     public int startXPosition() {
-        return (int) startPoint / (worldSize + 1);
+        return startPoint / (worldSize + 1);
     }
 
     public int startYPosition() {
         return startPoint % (worldSize + 1);
     }
 
-    public boolean hasValidPath(int x, int y) {
+    private boolean hasValidPath(int x, int y) {
         if (world[x][y].getType() == RoomType.GOLD) {
             return true;
+        } else if (world[x][y].getType() != RoomType.EMPTY) {
+            return false;
         } else {
             boolean lRoom = false, rRoom = false, uRoom = false, dRoom = false;
             if (x > 0) {
