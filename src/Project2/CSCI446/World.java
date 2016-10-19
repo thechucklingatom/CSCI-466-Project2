@@ -33,6 +33,20 @@ public class World {
 			if(xLocation - 1 < 0 || world[xLocation][yLocation].getType() == RoomType.OBSTACLE){
 				return true;
 			}
+		}else if(direction == Direction.WEST){
+			if(xLocation + 1 >= world.length
+					|| world[xLocation][yLocation].getType() == RoomType.OBSTACLE){
+				return true;
+			}
+		}else if(direction == Direction.NORTH){
+			if(yLocation - 1 < 0 || world[xLocation][yLocation].getType() == RoomType.OBSTACLE){
+				return true;
+			}
+		}else if(direction == Direction.SOUTH){
+			if(yLocation + 1 >= world.length
+					|| world[xLocation][yLocation].getType() == RoomType.OBSTACLE){
+				return true;
+			}
 		}
 
 		return false;
