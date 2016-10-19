@@ -72,6 +72,9 @@ public class Room {
 
     public void removePossibleType(RoomType delType) {
         possibleTypes.remove(delType);
+        if (possibleTypes.size() <= 1) {
+            this.type = possibleTypes.remove(0);
+        }
     }
 
     public List<RoomType> getPossibleTypes() {
