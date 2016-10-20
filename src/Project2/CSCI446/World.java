@@ -77,14 +77,16 @@ public class World {
 				if(world[iter][yLocation].getType() == RoomType.OBSTACLE){
 					return Percept.SILENCE;
 				}else if(world[iter][yLocation].getType() == RoomType.WUMPUS){
+					removeStenchAroundRoom(iter, yLocation);
 					return Percept.SCREAM;
 				}
 			}
 		}else if(direction == Direction.WEST){
-			for(int iter = xLocation; iter <= world.length; iter++){
+			for(int iter = xLocation; iter < world.length; iter++){
 				if(world[iter][yLocation].getType() == RoomType.OBSTACLE){
 					return Percept.SILENCE;
 				}else if(world[iter][yLocation].getType() == RoomType.WUMPUS){
+					removeStenchAroundRoom(iter, yLocation);
 					return Percept.SCREAM;
 				}
 			}
@@ -93,19 +95,39 @@ public class World {
 				if(world[xLocation][iter].getType() == RoomType.OBSTACLE){
 					return Percept.SILENCE;
 				}else if(world[xLocation][iter].getType() == RoomType.WUMPUS){
+					removeStenchAroundRoom(xLocation, iter);
 					return Percept.SCREAM;
 				}
 			}
 		}else if(direction == Direction.SOUTH){
-			for(int iter = yLocation; iter <= world.length; iter++){
+			for(int iter = yLocation; iter < world.length; iter++){
 				if(world[xLocation][iter].getType() == RoomType.OBSTACLE){
 					return Percept.SILENCE;
 				}else if(world[xLocation][iter].getType() == RoomType.WUMPUS){
+					removeStenchAroundRoom(xLocation, iter);
 					return Percept.SCREAM;
 				}
 			}
 		}
 
 		return Percept.SILENCE;
+	}
+
+	public void removeStenchAroundRoom(int xLocation, int yLocation){
+		if(xLocation != 0){
+			world[xLocation -1][yLocation].delPercept(Percept.SMELLY);
+		}
+
+		if(xLocation < world.length){
+			world[xLocation + 1][yLocation].delPercept(Percept.SMELLY);
+		}
+
+		if(yLocation != 0){
+			world[xLocation][yLocation - 1].delPercept(Percept.SMELLY);
+		}
+
+		if(yLocation < world.length){
+			world[xLocation][yLocation + 1].delPercept(Percept.SMELLY);
+		}
 	}
 }

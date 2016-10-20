@@ -8,6 +8,8 @@ import Exceptions.OutOfArrowsException;
 public abstract class Player {
 
 	public int arrowCount;
+	//Win +1000, die -1000, move/turn -1, fire arrow -10, kill wumpus +10
+	public int totalCost;
 	public Direction direction = Direction.EAST;
 	public Room currentRoom;
 	public World world;
