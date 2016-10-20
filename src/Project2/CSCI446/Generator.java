@@ -82,6 +82,7 @@ public class Generator {
 
         // set goal state
         world[xPos][yPos].setType(RoomType.GOLD);
+        world[xPos][yPos].addPercept(Percept.GLITTER);
 
         // randomly select a start point for the Explorer
         do {
@@ -134,6 +135,12 @@ public class Generator {
         return new World(world, startXPosition(), startYPosition());
     }
 
+    /**
+     *
+     * @param x
+     * @param y
+     * @param sense
+     */
     private void updatePercepts(int x, int y, Percept sense) {
         if (x + 1 < worldSize) {
             // we have adj. Room to the right of this point

@@ -28,28 +28,46 @@ public class World {
 		return world[xLocation][yLocation];
 	}
 
-	public boolean isBump(Direction direction){
-		if(direction == Direction.EAST){
-			if(xLocation - 1 < 0 || world[xLocation][yLocation].getType() == RoomType.OBSTACLE){
-				return true;
+	public RoomType canMove(Direction direction) {
+		if (direction == Direction.EAST) {
+			if(xLocation - 1 < 0){
+				return RoomType.OBSTACLE;
 			}
-		}else if(direction == Direction.WEST){
-			if(xLocation + 1 >= world.length
-					|| world[xLocation][yLocation].getType() == RoomType.OBSTACLE){
-				return true;
+			if (world[xLocation - 1][yLocation].getType() == RoomType.OBSTACLE
+					|| world[xLocation - 1][yLocation].getType() == RoomType.WUMPUS
+					|| world[xLocation - 1][yLocation].getType() == RoomType.PIT) {
+				return world[xLocation - 1][yLocation].getType();
 			}
-		}else if(direction == Direction.NORTH){
-			if(yLocation - 1 < 0 || world[xLocation][yLocation].getType() == RoomType.OBSTACLE){
-				return true;
+		} else if (direction == Direction.WEST) {
+			if(xLocation + 1 < 0){
+				return RoomType.OBSTACLE;
 			}
-		}else if(direction == Direction.SOUTH){
-			if(yLocation + 1 >= world.length
-					|| world[xLocation][yLocation].getType() == RoomType.OBSTACLE){
-				return true;
+			if (world[xLocation + 1][yLocation].getType() == RoomType.OBSTACLE
+					|| world[xLocation + 1][yLocation].getType() == RoomType.WUMPUS
+					|| world[xLocation + 1][yLocation].getType() == RoomType.PIT) {
+				return world[xLocation + 1][yLocation].getType();
+			}
+		} else if (direction == Direction.NORTH) {
+			if(yLocation - 1 < 0){
+				return RoomType.OBSTACLE;
+			}
+			if (world[xLocation][yLocation - 1].getType() == RoomType.OBSTACLE
+					|| world[xLocation][yLocation - 1].getType() == RoomType.WUMPUS
+					|| world[xLocation][yLocation - 1].getType() == RoomType.PIT) {
+				return world[xLocation][yLocation - 1].getType();
+			}
+		} else if (direction == Direction.SOUTH) {
+			if(yLocation + 1 < 0){
+				return RoomType.OBSTACLE;
+			}
+			if (world[xLocation][yLocation + 1].getType() == RoomType.OBSTACLE
+					|| world[xLocation][yLocation + 1].getType() == RoomType.WUMPUS
+					|| world[xLocation][yLocation + 1].getType() == RoomType.PIT) {
+				return world[xLocation][yLocation + 1].getType();
 			}
 		}
 
-		return false;
+		return null;
 	}
 
 	public Percept shoot(Direction direction){
