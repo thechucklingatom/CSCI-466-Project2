@@ -10,6 +10,7 @@ public abstract class Player {
 	public int arrowCount;
 	public Direction direction = Direction.EAST;
 	public Room currentRoom;
+	public World world;
 
 	public void turnLeft(){
 		switch(direction){
@@ -28,15 +29,7 @@ public abstract class Player {
 		}
 	}
 
-	public void shoot() throws OutOfArrowsException{
-		if(arrowCount == 0){
-			System.out.println("Out of error cannot shoot!");
-			throw new OutOfArrowsException();
-		}else{
-			//TODO shoot arrow logic here
-			arrowCount--;
-		}
-	}
+	public abstract void shoot() throws OutOfArrowsException;
 
 	public void turnRight(){
 		switch(direction){

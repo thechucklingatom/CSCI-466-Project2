@@ -130,6 +130,10 @@ public class Generator {
         return world;
     }
 
+    public World getWorldAsWorld(){
+        return new World(world, startXPosition(), startYPosition());
+    }
+
     private void updatePercepts(int x, int y, Percept sense) {
         if (x + 1 < worldSize) {
             // we have adj. Room to the right of this point

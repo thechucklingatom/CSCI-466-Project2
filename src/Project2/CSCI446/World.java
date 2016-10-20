@@ -51,4 +51,43 @@ public class World {
 
 		return false;
 	}
+
+	public Percept shoot(Direction direction){
+
+		if(direction == Direction.EAST){
+			for(int iter = xLocation; iter >= 0; iter--){
+				if(world[iter][yLocation].getType() == RoomType.OBSTACLE){
+					return Percept.SILENCE;
+				}else if(world[iter][yLocation].getType() == RoomType.WUMPUS){
+					return Percept.SCREAM;
+				}
+			}
+		}else if(direction == Direction.WEST){
+			for(int iter = xLocation; iter <= world.length; iter++){
+				if(world[iter][yLocation].getType() == RoomType.OBSTACLE){
+					return Percept.SILENCE;
+				}else if(world[iter][yLocation].getType() == RoomType.WUMPUS){
+					return Percept.SCREAM;
+				}
+			}
+		}else if(direction == Direction.NORTH){
+			for(int iter = yLocation; iter >= 0; iter--){
+				if(world[xLocation][iter].getType() == RoomType.OBSTACLE){
+					return Percept.SILENCE;
+				}else if(world[xLocation][iter].getType() == RoomType.WUMPUS){
+					return Percept.SCREAM;
+				}
+			}
+		}else if(direction == Direction.SOUTH){
+			for(int iter = yLocation; iter <= world.length; iter++){
+				if(world[xLocation][iter].getType() == RoomType.OBSTACLE){
+					return Percept.SILENCE;
+				}else if(world[xLocation][iter].getType() == RoomType.WUMPUS){
+					return Percept.SCREAM;
+				}
+			}
+		}
+
+		return Percept.SILENCE;
+	}
 }
