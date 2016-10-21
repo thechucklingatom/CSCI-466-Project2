@@ -5,7 +5,7 @@ package Project2.CSCI446;
  */
 public class InferenceEngine {
     KnowledgeBase[][] map;
-    int tempX, tempY;
+    int tempXWumpus, tempYWumpus;
 
     public InferenceEngine(KnowledgeBase[][] inMap){
         map = inMap;
@@ -103,8 +103,30 @@ public class InferenceEngine {
         return false;
     }
 
-    public Truth isSafe(){
-        return null;
+    public boolean isSafe(int x, int y, Direction d){
+        switch(d){
+            case EAST:
+                if(map[x+1][y].ask(RoomType.WUMPUS) == Truth.FALSE && map[x+1][y].ask(RoomType.PIT) == Truth.FALSE){
+                    return true;
+                }
+                break;
+            case NORTH:
+                if(map[x][y+1].ask(RoomType.WUMPUS) == Truth.FALSE && map[x][y+1].ask(RoomType.PIT) == Truth.FALSE){
+                    return true;
+                }
+                break;
+            case WEST:
+                if(map[x-1][y].ask(RoomType.WUMPUS) == Truth.FALSE && map[x-1][y].ask(RoomType.PIT) == Truth.FALSE){
+                    return true;
+                }
+                break;
+            case SOUTH:
+                if(map[x][y-1].ask(RoomType.WUMPUS) == Truth.FALSE && map[x][y-1].ask(RoomType.PIT) == Truth.FALSE){
+                    return true;
+                }
+                break;
+        }
+        return false;
     }
 
     public boolean canShootWumpus(int x, int y, Direction d){
@@ -134,8 +156,8 @@ public class InferenceEngine {
             x = x + xMod;
             y = y + yMod;
             if(map[x][y].ask(RoomType.WUMPUS) == Truth.TRUE){
-                tempX = x;
-                tempY = y;
+                tempXWumpus = x;
+                tempYWumpus = y;
                 return true;
             } else if(map[x][y].ask(RoomType.OBSTACLE) == Truth.FALSE ||
                       map[x][y].ask(RoomType.OBSTACLE) == Truth.MAYBE ||
@@ -148,8 +170,8 @@ public class InferenceEngine {
     }
 
     public void inferDeadWumpus(){
-        map[tempX][tempY].tell(Truth.FALSE, RoomType.WUMPUS);
-        tempX = 0;
-        tempY = 0;
+        map[tempXWumpus][tempYWumpus].tell(Truth.FALSE, RoomType.WUMPUS);
+        tempXWumpus = 0;
+        tempYWumpus = 0;
     }
 }

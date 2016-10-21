@@ -96,15 +96,24 @@ public class ReasoningPlayer extends Player{
             }
             //if we're in a stink/breeze, then we BACKTRACK
                 //if we are not:
-                    //start at the forward square, check for visited or obstacle
-                        //if not visited or obstacle, move forward
-                    //if so, try forward, then left
-                    //if all these fail, spiral outwards until you hit non-visted square
-                    //REVISIT THIS IDEA FOR PATHFINDING
-                    //got the square, facing it, check canMove(direction)
-                    //if bump, tell(T, OBSTACLE) and mark visited
-                    //if death, tell(T, p[what killed you])
-                    //if null, move(direction)
+            //start at the forward square, check for visited or obstacle
+                //if not visited or obstacle, move forward
+            //if so, try forward, then left
+            if(logic.isSafe(curX, curY, direction)){
+                RoomType nextType = world.canMove(direction);
+                if(nextType == null){
+                    world.move(direction);
+                    switch(direction){
+
+                    }
+                }
+            }
+            //if all these fail, spiral outwards until you hit non-visted square
+            //REVISIT THIS IDEA FOR PATHFINDING
+            //got the square, facing it, check canMove(direction)
+            //if bump, tell(T, OBSTACLE) and mark visited
+            //if death, tell(T, p[what killed you])
+            //if null, move(direction)
         } while (solved == false); //end of loop
     }
 
