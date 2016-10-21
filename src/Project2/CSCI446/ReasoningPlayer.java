@@ -52,45 +52,46 @@ public class ReasoningPlayer extends Player{
                 if (percept == Percept.WINDY) {
                     windy = true;
                 } //check for the goal state
-                if (logic.checkGold(curX, curY, percept)){
+                if (logic.checkGold(curX, curY, percept)) {
                     glitter = true;
                     pickUpGold();
                     return;
                 }
             }
             //for each adjacent, call update(map[][], p) where p is a false windy/smelly
-            if(!smelly){
-                logic.update(map[curX+1][curY], Percept.SMELLY);
-                logic.update(map[curX][curY+1], Percept.SMELLY);
-                logic.update(map[curX-1][curY], Percept.SMELLY);
-                logic.update(map[curX][curY-1], Percept.SMELLY);
+            if (!smelly) {
+                logic.update(map[curX + 1][curY], Percept.SMELLY);
+                logic.update(map[curX][curY + 1], Percept.SMELLY);
+                logic.update(map[curX - 1][curY], Percept.SMELLY);
+                logic.update(map[curX][curY - 1], Percept.SMELLY);
             }
-            if(!windy){
-                logic.update(map[curX+1][curY], Percept.WINDY);
-                logic.update(map[curX][curY+1], Percept.WINDY);
-                logic.update(map[curX-1][curY], Percept.WINDY);
-                logic.update(map[curX][curY-1], Percept.WINDY);
+            if (!windy) {
+                logic.update(map[curX + 1][curY], Percept.WINDY);
+                logic.update(map[curX][curY + 1], Percept.WINDY);
+                logic.update(map[curX - 1][curY], Percept.WINDY);
+                logic.update(map[curX][curY - 1], Percept.WINDY);
             }
             //iterate percepts to see if we can set squares to-
             //true variables if we have stink/breeze percepts
-            for(Percept percept : currentPercept){
-                if(smelly){
+            for (Percept percept : currentPercept) {
+                if (smelly) {
                     logic.checkIfTrue(curX, curY, RoomType.WUMPUS);
                 }
-                if(windy){
+                if (windy) {
                     logic.checkIfTrue(curX, curY, RoomType.PIT);
                 }
             }
             //---WE ARE NOW INFERING MOVE---
             //check if we can shoot a wumpus
             Percept success = null;
-            if(logic.canShootWumpus(curX, curY, direction) && arrowCount != 0) {
+            if (logic.canShootWumpus(curX, curY, direction) && arrowCount != 0) {
                 //if true, then shoot
-                try{
+                try {
                     success = shoot();
-                } catch (OutOfArrowsException e){}
+                } catch (OutOfArrowsException e) {
+                }
                 arrowCount--;
-                if(success == Percept.SCREAM){
+                if (success == Percept.SCREAM) {
                     logic.inferDeadWumpus();
                 }
             }
@@ -98,23 +99,30 @@ public class ReasoningPlayer extends Player{
             //if we are not:
             //start at the forward square, check for visited or obstacle
             boolean hasMoved = true;
-            if(!checkForward()){
+            if (!checkForward()) {
                 turnRight();
                 //then right
-                if(!checkForward()){
+                if (!checkForward()) {
                     turnLeft();
                     turnLeft();
-                    if(!checkForward()){
+                    if (!checkForward()) {
                         hasMoved = false;
                     }
                 }
             }
-
             //we failed to move in a direction of an unvisited, safe square, backtrack
-            //got the square, facing it, check canMove(direction)
-            //if bump, tell(T, OBSTACLE) and mark visited
-            //if death, tell(T, p[what killed you])
-            //if null, move(direction)
+            if (backtracking()) {
+                //if backtracking finds an unvisited safe square, return true
+                    //means that we can now just loop again
+                //if we reach backtracking stack size 0, then we did not find an unvisited safe square
+                    //in the else, we will then test dangerous squares, as they are the last places to go
+            } else {
+
+                //got the square, facing it, check canMove(direction)
+                //if bump, tell(T, OBSTACLE) and mark visited
+                //if death, tell(T, p[what killed you])
+                //if null, move(direction)
+            }
         } while (solved == false); //end of loop
     }
 
@@ -167,10 +175,16 @@ public class ReasoningPlayer extends Player{
                     move(direction);
                 } else if (nextType == RoomType.OBSTACLE) {
                     map[tempXY[0]][tempXY[1]].tell(Truth.TRUE, RoomType.OBSTACLE);
+                    map[tempXY[0]][tempXY[1]].tell(Truth.FALSE, RoomType.WUMPUS);
+                    map[tempXY[0]][tempXY[1]].tell(Truth.FALSE, RoomType.PIT);
                 }
             }
             return true;
         }
+        return false;
+    }
+
+    public boolean backtracking(){
         return false;
     }
 
