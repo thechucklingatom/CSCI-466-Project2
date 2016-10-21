@@ -36,7 +36,11 @@ public class ReasoningPlayer extends Player{
             //mark visited
             map[x][y].visited = true;
             //get percepts
+            currentRoom.getPercepts();
             //update the predicates of the squares around us
+            for (Percept p : currentRoom.getPercepts()) {
+
+            }
             //for each adjacent, call update(map[][])
             //check for goal
             //if Glitter(), pickUpGold() and return to end game
