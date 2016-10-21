@@ -1,5 +1,6 @@
 package Project2.CSCI446;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import Exceptions.OutOfArrowsException;
@@ -12,11 +13,13 @@ public abstract class Player {
 	public int arrowCount;
 	//Win +1000, die -1000, move/turn -1, fire arrow -10, kill wumpus +10
 	public int totalCost;
+	public List<RoomType> deaths = new ArrayList<RoomType>();
 	public Direction direction = Direction.EAST;
 	public Room currentRoom;
 	public World world;
 
 	public void turnLeft(){
+		totalCost -= 1;
 		switch(direction){
 			case EAST:
 				direction = Direction.NORTH;
@@ -38,6 +41,7 @@ public abstract class Player {
 	public abstract void shoot() throws OutOfArrowsException;
 
 	public void turnRight(){
+		totalCost -= 1;
 		switch(direction){
 			case EAST:
 				direction = Direction.SOUTH;
