@@ -78,6 +78,7 @@ public class World {
 					return Percept.SILENCE;
 				}else if(world[iter][yLocation].getType() == RoomType.WUMPUS){
 					removeStenchAroundRoom(iter, yLocation);
+					world[iter][yLocation].setType(RoomType.EMPTY);
 					return Percept.SCREAM;
 				}
 			}
@@ -87,6 +88,7 @@ public class World {
 					return Percept.SILENCE;
 				}else if(world[iter][yLocation].getType() == RoomType.WUMPUS){
 					removeStenchAroundRoom(iter, yLocation);
+					world[iter][yLocation].setType(RoomType.EMPTY);
 					return Percept.SCREAM;
 				}
 			}
@@ -96,6 +98,7 @@ public class World {
 					return Percept.SILENCE;
 				}else if(world[xLocation][iter].getType() == RoomType.WUMPUS){
 					removeStenchAroundRoom(xLocation, iter);
+					world[xLocation][iter].setType(RoomType.EMPTY);
 					return Percept.SCREAM;
 				}
 			}
@@ -105,6 +108,7 @@ public class World {
 					return Percept.SILENCE;
 				}else if(world[xLocation][iter].getType() == RoomType.WUMPUS){
 					removeStenchAroundRoom(xLocation, iter);
+					world[xLocation][iter].setType(RoomType.EMPTY);
 					return Percept.SCREAM;
 				}
 			}
