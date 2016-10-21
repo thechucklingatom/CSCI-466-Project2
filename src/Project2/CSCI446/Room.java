@@ -19,7 +19,6 @@ public class Room {
         this.type = RoomType.EMPTY;
         possibleTypes = new ArrayList<RoomType>();
         percepts = new ArrayList<Percept>();
-
     }
 
     public Room() {
