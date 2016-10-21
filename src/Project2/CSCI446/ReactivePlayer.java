@@ -54,7 +54,6 @@ public class ReactivePlayer extends Player{
 				}
 			}
 		}
-
 	}
 
 	@Override

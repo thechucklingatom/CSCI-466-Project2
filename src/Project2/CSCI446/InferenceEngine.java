@@ -12,7 +12,7 @@ public class InferenceEngine {
 
     public void update(KnowledgeBase base){
         //if breeze/stink are false:
-        //swtich to set predicate that is related to percept
+        //switch to set predicate that is related to percept
         //call ask(p)
         //if return is MAYBE, tell(F, p)
     }
