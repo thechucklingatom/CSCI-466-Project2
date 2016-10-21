@@ -31,6 +31,7 @@ public class ReasoningPlayer extends Player{
         logic = new InferenceEngine(map);
         curX = 26;
         curY = 26;
+        moveStack = new Stack<Move>();
     }
 
     //when we move, make sure to update currentRoom
