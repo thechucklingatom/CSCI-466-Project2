@@ -16,7 +16,7 @@ public class ReasoningPlayer extends Player{
         arrowCount = numArrows;
         currentRoom = inRoom;
         world = theWorld;
-        map = new KnowledgeBase[625][625];
+        map = new KnowledgeBase[50][50];
         for (KnowledgeBase[] x : map) {
             for(KnowledgeBase y : x) {
                 y = new KnowledgeBase();
