@@ -212,6 +212,8 @@ public class ReasoningPlayer extends Player{
     }
 
     public boolean backtracking(){
+        //we turn left once more to face the opposite direction of where we were going
+        turnLeft();
         while(!moveStack.empty()){
             Move curMove = moveStack.pop();
             switch(curMove){
