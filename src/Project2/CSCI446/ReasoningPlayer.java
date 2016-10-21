@@ -10,46 +10,93 @@ import java.util.List;
 public class ReasoningPlayer extends Player{
     private InferenceEngine logic;
     private KnowledgeBase[][] map;
+    private int curX;
+    private int curY;
     private List<Percept> currentPercept;
+    private boolean solved = false;
 
     public ReasoningPlayer(int numArrows, Room inRoom, World theWorld){
         arrowCount = numArrows;
         currentRoom = inRoom;
         world = theWorld;
-        map = new KnowledgeBase[50][50];
+        map = new KnowledgeBase[55][55];
         for (KnowledgeBase[] x : map) {
             for(KnowledgeBase y : x) {
                 y = new KnowledgeBase();
             }
         }
         logic = new InferenceEngine(map);
+        curX = 26;
+        curY = 26;
     }
 
     //when we move, make sure to update currentRoom
     @Override
     public void solve() {
-        boolean solved = false;
         //while loop that continues until GOAL
         do {
-            int x = currentRoom.getXPosition();
-            int y = currentRoom.getYPosition();
             //mark visited
-            map[x][y].visited = true;
+            map[curX][curY].visited = true;
             //get percepts
-            //update the predicates of the squares around us
-                //for each adjacent, call update(map[][])
-            //check for goal
-                //if Glitter(), pickUpGold() and return to end game
-            //iterate percepts to see if we can set squares to true
-            //variables if we have stink/breeze percepts
-                //call checkIfTrue(curPer)
+            currentPercept = currentRoom.getPercepts();
+
+            //update the predicates
+            boolean smelly = false, windy = false, glitter = false;
+            for (Percept percept : currentPercept) {
+                //the percepts we send to update is the ones that are FALSE
+
+                if (percept == Percept.SMELLY) {
+                    smelly = true;
+                }
+                if (percept == Percept.WINDY) {
+                    windy = true;
+                } //check for the goal state
+                if (logic.checkGold(curX, curY, percept)){
+                    glitter = true;
+                    pickUpGold();
+                    return;
+                }
+            }
+            //for each adjacent, call update(map[][], p) where p is a false windy/smelly
+            if(!smelly){
+                logic.update(map[curX+1][curY], Percept.SMELLY);
+                logic.update(map[curX][curY+1], Percept.SMELLY);
+                logic.update(map[curX-1][curY], Percept.SMELLY);
+                logic.update(map[curX][curY-1], Percept.SMELLY);
+            }
+            if(!windy){
+                logic.update(map[curX+1][curY], Percept.WINDY);
+                logic.update(map[curX][curY+1], Percept.WINDY);
+                logic.update(map[curX-1][curY], Percept.WINDY);
+                logic.update(map[curX][curY-1], Percept.WINDY);
+            }
+            //iterate percepts to see if we can set squares to-
+            //true variables if we have stink/breeze percepts
+            for(Percept percept : currentPercept){
+                if(smelly){
+                    logic.checkIfTrue(curX, curY, RoomType.WUMPUS);
+                }
+                if(windy){
+                    logic.checkIfTrue(curX, curY, RoomType.PIT);
+                }
+            }
             //---WE ARE NOW INFERING MOVE---
             //check if we can shoot a wumpus
+            Percept success = null;
+            if(logic.canShootWumpus(curX, curY, direction) && arrowCount != 0) {
                 //if true, then shoot
-                //if we're in a stink/breeze, then we BACKTRACK
+                try{
+                    success = shoot();
+                } catch (OutOfArrowsException e){}
+                arrowCount--;
+                if(success == Percept.SCREAM){
+                    logic.inferDeadWumpus();
+                }
+            }
+            //if we're in a stink/breeze, then we BACKTRACK
                 //if we are not:
-                    //start at the right square, check for visited or obstacle
-                    //if not, turn right
+                    //start at the forward square, check for visited or obstacle
+                        //if not visited or obstacle, move forward
                     //if so, try forward, then left
                     //if all these fail, spiral outwards until you hit non-visted square
                     //REVISIT THIS IDEA FOR PATHFINDING
@@ -60,8 +107,12 @@ public class ReasoningPlayer extends Player{
         } while (solved == false); //end of loop
     }
 
+    public void pickUpGold(){
+        solved = true;
+    }
+
     @Override
     public Percept shoot() throws OutOfArrowsException {
-        return null;
+        return world.shoot(direction);
     }
 }
