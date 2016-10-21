@@ -15,6 +15,11 @@ public class ReactivePlayer extends Player{
 	}
 
 	@Override
+	public void solve() {
+
+	}
+
+	@Override
 	public void shoot() throws OutOfArrowsException {
 
 	}

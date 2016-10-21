@@ -1,5 +1,7 @@
 package Project2.CSCI446;
 
+import java.util.List;
+
 import Exceptions.OutOfArrowsException;
 
 /**
@@ -50,6 +52,10 @@ public abstract class Player {
 				direction = Direction.WEST;
 				break;
 		}
+	}
+
+	public List<Percept> getPercepts(){
+		return currentRoom.getPercepts();
 	}
 
 
