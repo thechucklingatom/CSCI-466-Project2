@@ -7,16 +7,14 @@ public class KnowledgeBase {
 
     private Truth wumpus = Truth.FALSE; // assume a Room isn't wumpus since no smell yet
     private Truth pit = Truth.FALSE;    // assume a Room isn't btmls pit since no breeze yet
-    private Truth gold = Truth.FALSE; // assume a Room isn't gold since sinse in room only
-    private Truth obstacle = Truth.FALSE;   // assume a Room isn't obstacle since no bump yet
-    private Truth empty = Truth.MAYBE;  // might be empty since can't sense gold/obstacle outside square
-    protected boolean visited = false; // this room is unknown to us currently
-
+    private Truth gold = Truth.FALSE; //
+    private Truth obstacle = Truth.FALSE;
+    private Truth empty = Truth.FALSE;
+    protected boolean visited = false;
 
     public KnowledgeBase(){
 
     }
-
     public Truth ask(RoomType p){
         if (RoomType.GOLD == p) {
             return gold;
@@ -26,41 +24,31 @@ public class KnowledgeBase {
             return pit;
         } else if (RoomType.OBSTACLE == p) {
             return obstacle;
-        } else { // infer empty room question
+        } else if (RoomType.EMPTY == p) {
             return empty;
         }
+        return null;
     }
 
     public void tell(Truth inTruth, RoomType roomtype){
-        if (RoomType.GOLD == roomtype) {
-            gold = Truth.TRUE;  // we found gold!
-            wumpus = Truth.FALSE;
-            obstacle = Truth.FALSE;
-            pit = Truth.FALSE;
-            empty = Truth.FALSE;
-        } else if(RoomType.WUMPUS == roomtype) {
-            gold = Truth.FALSE;
-            wumpus = Truth.TRUE; // we hit a wumpus
-            obstacle = Truth.FALSE;
-            pit = Truth.FALSE;
-            empty = Truth.FALSE;
-        } else if(RoomType.OBSTACLE == roomtype) {
-            gold = Truth.FALSE;
-            wumpus = Truth.FALSE;
-            obstacle = Truth.TRUE;  // bumped an obstacle
-            pit = Truth.FALSE;
-            empty = Truth.FALSE;
-        } else if (RoomType.PIT == roomtype) {
-            gold = Truth.FALSE;
-            wumpus = Truth.FALSE;
-            obstacle = Truth.FALSE;
-            pit = Truth.TRUE;   // fell into a pit
-            empty = Truth.FALSE;
-        } else {
-            gold = Truth.FALSE;
-            wumpus = Truth.FALSE;
-            obstacle = Truth.FALSE;
-            pit = Truth.TRUE;
+        switch(roomtype){
+            case WUMPUS:
+                wumpus = inTruth;
+                break;
+            case PIT:
+                pit = inTruth;
+                break;
+            case GOLD:
+                gold = inTruth;
+                break;
+            case OBSTACLE:
+                obstacle = inTruth;
+                break;
+            case EMPTY:
+                empty = inTruth;
+                break;
+            default:
+                break;
         }
     }
 }
