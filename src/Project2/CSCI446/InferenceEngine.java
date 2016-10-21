@@ -169,6 +169,13 @@ public class InferenceEngine {
         return false;
     }
 
+
+    /**
+     * Returns a boolean if you are near a valid unvisited Room that is safe to explor
+     * @param x x-coordinate of current Room location in the Map
+     * @param y y-coordinate of current Room location in the Mpa
+     * @return  true/false
+     */
     public boolean nearUnvisited(int x, int y) {
         return (map[x][y+1].visited && isSafe(x, y, Direction.NORTH)) || (map[x+1][y].visited && isSafe(x, y, Direction.EAST))
                 || (map[x][y-1].visited && isSafe(x, y, Direction.SOUTH)) || (map[x-1][y].visited && isSafe(x, y, Direction.WEST));
