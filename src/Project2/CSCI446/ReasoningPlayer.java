@@ -29,8 +29,10 @@ public class ReasoningPlayer extends Player{
     @Override
     public void solve() {
         //while loop that continues until GOAL
-            //CHECK FOR GOAL
+            //mark visited
             //get percepts
+            //check for goal
+                //if Glitter(), pickUpGold() and return to end game
             //update the predicates of the squares around us
                 //for each adjacent, call update(map[][])
             //iterate percepts to see if we can set squares to true
@@ -39,11 +41,16 @@ public class ReasoningPlayer extends Player{
         //---WE ARE NOW INFERING MOVE---
             //check if we can shoot a wumpus
                 //if true, then shoot
-            //start at the right square, check for visited
+            //start at the right square, check for visited and obstacle
                 //if not, turn right
                 //if so, try forward, then left
                 //if all these fail, spiral outwards until you hit non-visted square
                 //REVISIT THIS IDEA FOR PATHFINDING
+            //got the square, facing it, check canMove(direction)
+                //if bump, tell(T, OBSTACLE) and mark visited
+                //if death, tell(T, p[what killed you])
+                //if null, move(direction)
+        //end of loop
     }
 
     @Override
