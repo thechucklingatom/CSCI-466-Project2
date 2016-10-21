@@ -46,10 +46,10 @@ public class ReactivePlayer extends Player{
 				deaths.add(roomMovingTo);
 				turn();
 			}else{
-				totalCost -= 1;
 				if(random.nextBoolean()){
 					turn();
 				}else{
+					totalCost -= 1;
 					currentRoom = world.move(direction);
 				}
 			}
