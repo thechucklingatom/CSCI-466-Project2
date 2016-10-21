@@ -3,6 +3,7 @@ package Project2.CSCI446;
 import Exceptions.OutOfArrowsException;
 
 import java.util.List;
+import java.util.Stack;
 
 /**
  * Created by Alan Fraticelli on 10/20/2016.
@@ -14,6 +15,7 @@ public class ReasoningPlayer extends Player{
     private int curY;
     private List<Percept> currentPercept;
     private boolean solved = false;
+    private Stack<Move> moveStack;
 
     public ReasoningPlayer(int numArrows, Room inRoom, World theWorld){
         arrowCount = numArrows;
@@ -101,10 +103,13 @@ public class ReasoningPlayer extends Player{
             boolean hasMoved = true;
             if (!checkForward()) {
                 turnRight();
+                moveStack.push(Move.TURNRIGHT);
                 //then right
                 if (!checkForward()) {
                     turnLeft();
                     turnLeft();
+                    moveStack.push(Move.TURNLEFT);
+                    moveStack.push(Move.TURNLEFT);
                     if (!checkForward()) {
                         hasMoved = false;
                     }
@@ -118,10 +123,6 @@ public class ReasoningPlayer extends Player{
                     //in the else, we will then test dangerous squares, as they are the last places to go
             } else {
 
-                //got the square, facing it, check canMove(direction)
-                //if bump, tell(T, OBSTACLE) and mark visited
-                //if death, tell(T, p[what killed you])
-                //if null, move(direction)
             }
         } while (solved == false); //end of loop
     }
@@ -173,6 +174,7 @@ public class ReasoningPlayer extends Player{
                 if (nextType == null) {
                     world.move(direction);
                     move(direction);
+                    moveStack.push(Move.FORWARD);
                 } else if (nextType == RoomType.OBSTACLE) {
                     map[tempXY[0]][tempXY[1]].tell(Truth.TRUE, RoomType.OBSTACLE);
                     map[tempXY[0]][tempXY[1]].tell(Truth.FALSE, RoomType.WUMPUS);
@@ -185,6 +187,24 @@ public class ReasoningPlayer extends Player{
     }
 
     public boolean backtracking(){
+        while(!moveStack.empty()){
+            Move curMove = moveStack.pop();
+            switch(curMove){
+                case FORWARD:
+                    world.move(direction);
+                    move(direction);
+                    if(logic.nearUnvisited(curX, curY)){
+                        return true;
+                    }
+                    break;
+                case TURNLEFT:
+                    turnRight();
+                    break;
+                case TURNRIGHT:
+                    turnLeft();
+                    break;
+            }
+        }
         return false;
     }
 
