@@ -1,0 +1,2 @@
+Player Type,Total Score,World Size,Wumpus Probability,Obstacle Probability,Pit Probability,Total Deaths,Pit Deaths,Wumpus Deaths,Have gold
+ReactivePlayer,-10000,5,0.100000,0.100000,0.100000,0,0,0,false
