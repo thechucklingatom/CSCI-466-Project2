@@ -9,7 +9,7 @@ public class KnowledgeBase {
     private Truth pit = Truth.FALSE;    // assume a Room isn't btmls pit since no breeze yet
     private Truth gold = Truth.FALSE; //
     private Truth obstacle = Truth.FALSE;
-    private Truth empty = Truth.MAYBE;
+    private Truth empty = Truth.FALSE;
     protected boolean visited = false;
 
     public KnowledgeBase(){
@@ -31,6 +31,24 @@ public class KnowledgeBase {
     }
 
     public void tell(Truth inTruth, RoomType roomtype){
-
+        switch(roomtype){
+            case WUMPUS:
+                wumpus = inTruth;
+                break;
+            case PIT:
+                pit = inTruth;
+                break;
+            case GOLD:
+                gold = inTruth;
+                break;
+            case OBSTACLE:
+                obstacle = inTruth;
+                break;
+            case EMPTY:
+                empty = inTruth;
+                break;
+            default:
+                break;
+        }
     }
 }
