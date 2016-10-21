@@ -129,14 +129,17 @@ public class InferenceEngine {
         return false;
     }
 
+    /**
+     * Return boolean if you can shoot a wumpus or not
+     * @param x x-position of this current Room on the map
+     * @param y y-position of this current Room on the map
+     * @param d the direction the Explorer is currently facing
+     * @return true/false
+     */
     public boolean canShootWumpus(int x, int y, Direction d){
-        //iterate through the squares infront of the agent
-            //if wumpus, return true
-            //if obstacle, return false
+        int xMod = 0, yMod = 0; // used to modify our position accordinly based on direction
 
-        boolean done = false;
-        int xMod = 0, yMod = 0;
-
+        // set modifiers based on players current direction
         switch(d){
             case EAST:
                 xMod = 1;
@@ -152,26 +155,34 @@ public class InferenceEngine {
                 break;
         }
 
-        while(!done){
-            x = x + xMod;
-            y = y + yMod;
-            if(map[x][y].ask(RoomType.WUMPUS) == Truth.TRUE){
-                tempXWumpus = x;
-                tempYWumpus = y;
-                return true;
-            } else if(map[x][y].ask(RoomType.OBSTACLE) == Truth.FALSE ||
-                      map[x][y].ask(RoomType.OBSTACLE) == Truth.MAYBE ||
-                      map[x][y].ask(RoomType.WUMPUS) == Truth.MAYBE){
-                return false;
+        // while the arrow isn't done flying...
+        while(true){
+            x = x + xMod; // modify the arrows x-pos
+            y = y + yMod; // modify the arrows y-pos
+            if(map[x][y].ask(RoomType.WUMPUS) == Truth.TRUE){   // We hit a wumpus!
+                tempXWumpus = x;    // this is the dead wumpus location(x)
+                tempYWumpus = y;    // this is the dead wumpus location(y)
+                return true;    // break out of this loop
+            } else if(map[x][y].ask(RoomType.OBSTACLE) == Truth.FALSE || // we will definitely hit an obstacle this way
+                      map[x][y].ask(RoomType.OBSTACLE) == Truth.MAYBE || // we might hit an obstacle here or ...
+                      map[x][y].ask(RoomType.WUMPUS) == Truth.MAYBE){   // we might hit a wumpus, we might not
+                return false; // since this arrow isn't certain, we can't shoot the wumpus
             }
         }
-
-        return false;
     }
 
+    /**
+     * Returns a boolean if you are near a valid unvisited Room that is safe to explor
+     * @param x x-coordinate of current Room location in the Map
+     * @param y y-coordinate of current Room location in the Mpa
+     * @return  true/false
+     */
     public boolean nearUnvisited(int x, int y) {
-        return (map[x][y+1].visited && isSafe(x, y, Direction.NORTH)) || (map[x+1][y].visited && isSafe(x, y, Direction.EAST))
-                || (map[x][y-1].visited && isSafe(x, y, Direction.SOUTH)) || (map[x-1][y].visited && isSafe(x, y, Direction.WEST));
+        // check the adjacent squares for possible unvisited and safe Rooms
+        return (map[x][y+1].visited && isSafe(x, y, Direction.NORTH)) ||
+                (map[x+1][y].visited && isSafe(x, y, Direction.EAST)) ||
+                (map[x][y-1].visited && isSafe(x, y, Direction.SOUTH)) ||
+                (map[x-1][y].visited && isSafe(x, y, Direction.WEST));
     }
 
     public void inferDeadWumpus(){

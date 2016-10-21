@@ -23,7 +23,7 @@ public class ReasoningPlayer extends Player{
         for (int i = 0; i < map.length; i++) {
 
             for (int i1 = 0; i1 < map.length; i1++) {
-                 map[i][i1] = new KnowledgeBase();
+                map[i][i1] = new KnowledgeBase();
             }
         }
         logic = new InferenceEngine(map);
@@ -95,7 +95,7 @@ public class ReasoningPlayer extends Player{
                 }
             }
             //if we're in a stink/breeze, then we BACKTRACK
-                //if we are not:
+            //if we are not:
             //start at the forward square, check for visited or obstacle
             boolean hasMoved = true;
             if(!checkForward()){
