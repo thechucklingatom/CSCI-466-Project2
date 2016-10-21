@@ -110,8 +110,7 @@ public class ReasoningPlayer extends Player{
                 }
             }
 
-            //if all these fail, spiral outwards until you hit non-visted square
-            //REVISIT THIS IDEA FOR PATHFINDING
+            //we failed to move in a direction of an unvisited, safe square, backtrack
             //got the square, facing it, check canMove(direction)
             //if bump, tell(T, OBSTACLE) and mark visited
             //if death, tell(T, p[what killed you])
