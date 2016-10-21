@@ -150,6 +150,7 @@ public class ReasoningPlayer extends Player{
     }
 
     public void move(Direction d){
+        totalCost -= 1;
         switch(d){
             case EAST:
                 curX++;
