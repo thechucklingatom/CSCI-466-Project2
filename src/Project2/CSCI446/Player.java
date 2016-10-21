@@ -31,6 +31,8 @@ public abstract class Player {
 		}
 	}
 
+	public abstract void solve();
+
 	public abstract void shoot() throws OutOfArrowsException;
 
 	public void turnRight(){
