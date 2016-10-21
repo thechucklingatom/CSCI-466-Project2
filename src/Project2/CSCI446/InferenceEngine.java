@@ -169,6 +169,11 @@ public class InferenceEngine {
         return false;
     }
 
+    public boolean nearUnvisited(int x, int y) {
+        return (map[x][y+1].visited && isSafe(x, y, Direction.NORTH)) || (map[x+1][y].visited && isSafe(x, y, Direction.EAST))
+                || (map[x][y-1].visited && isSafe(x, y, Direction.SOUTH)) || (map[x-1][y].visited && isSafe(x, y, Direction.WEST));
+    }
+
     public void inferDeadWumpus(){
         map[tempXWumpus][tempYWumpus].tell(Truth.FALSE, RoomType.WUMPUS);
         tempXWumpus = 0;
