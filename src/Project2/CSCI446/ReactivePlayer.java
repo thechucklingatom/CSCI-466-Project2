@@ -28,7 +28,7 @@ public class ReactivePlayer extends Player{
 				return;
 			}
 
-			roomMovingTo = world.canMove(Direction.EAST);
+			roomMovingTo = world.canMove(direction);
 
 			if(roomMovingTo == RoomType.OBSTACLE){
 				totalCost -= 1;
