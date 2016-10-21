@@ -12,7 +12,6 @@ public class KnowledgeBase {
     private Truth empty = Truth.MAYBE;
     protected boolean visited = false;
 
-
     public KnowledgeBase(){
 
     }
