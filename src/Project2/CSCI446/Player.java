@@ -10,6 +10,7 @@ import Exceptions.OutOfArrowsException;
  */
 public abstract class Player {
 
+	public boolean haveGold = false;
 	public int arrowCount;
 	//Win +1000, die -1000, move/turn -1, fire arrow -10, kill wumpus +10
 	public int totalCost;
@@ -60,6 +61,10 @@ public abstract class Player {
 
 	public List<Percept> getPercepts(){
 		return currentRoom.getPercepts();
+	}
+
+	public void pickUpGold(){
+		haveGold = true;
 	}
 
 

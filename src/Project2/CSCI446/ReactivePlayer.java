@@ -17,7 +17,13 @@ public class ReactivePlayer extends Player{
 	@Override
 	public void solve() {
 		RoomType roomMovingTo;
-		while(totalCost < 10000) {
+		while(totalCost > -10000) {
+
+			if(currentRoom.getPercepts().contains(Percept.GLITTER)){
+				pickUpGold();
+				return;
+			}
+
 			roomMovingTo = world.canMove(Direction.EAST);
 
 			if(roomMovingTo == RoomType.OBSTACLE){
@@ -35,6 +41,9 @@ public class ReactivePlayer extends Player{
 				totalCost -= 1000;
 				deaths.add(roomMovingTo);
 				turnRight();
+			}else{
+				totalCost -= 1;
+				currentRoom = world.move(direction);
 			}
 		}
 
