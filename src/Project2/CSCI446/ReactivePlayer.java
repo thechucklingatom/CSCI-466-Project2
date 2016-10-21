@@ -41,7 +41,7 @@ public class ReactivePlayer extends Player{
 	}
 
 	@Override
-	public void shoot() throws OutOfArrowsException {
-		world.shoot(direction);
+	public Percept shoot() throws OutOfArrowsException {
+		return world.shoot(direction);
 	}
 }

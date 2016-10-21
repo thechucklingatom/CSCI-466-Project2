@@ -38,7 +38,7 @@ public abstract class Player {
 
 	public abstract void solve();
 
-	public abstract void shoot() throws OutOfArrowsException;
+	public abstract Percept shoot() throws OutOfArrowsException;
 
 	public void turnRight(){
 		totalCost -= 1;
