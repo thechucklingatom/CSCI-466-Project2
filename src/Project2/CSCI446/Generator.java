@@ -29,6 +29,14 @@ public class Generator {
     }
 
     private void GenerateWorld() {
+        for (int i = 0; i < world.length; i++) {
+
+            for (int j = 0; j < world.length; j++) {
+                world[j][i] = new Room(i, j);
+            }
+
+        }
+
         for (int row = 0; row < worldSize; row++) {
             for (int column = 0; column < worldSize; column++) {
                 double rnd = rng.nextFloat();

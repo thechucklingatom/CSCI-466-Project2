@@ -130,4 +130,21 @@ public class World {
 			world[xLocation][yLocation + 1].delPercept(Percept.SMELLY);
 		}
 	}
+
+	public Room currentRoom(){
+		return world[xLocation][yLocation];
+	}
+
+	public int numberOfWumpi(){
+		int numberOfWumpuses = 0;
+		for (Room[] roomArray: world) {
+			for (Room room : roomArray) {
+				if(RoomType.WUMPUS == room.getType()){
+					numberOfWumpuses++;
+				}
+			}
+		}
+
+		return numberOfWumpuses;
+	}
 }
