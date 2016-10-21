@@ -117,6 +117,10 @@ public class ReasoningPlayer extends Player{
         } while (solved == false); //end of loop
     }
 
+    public void move(Direction d){
+
+    }
+
     public void pickUpGold(){
         solved = true;
     }
