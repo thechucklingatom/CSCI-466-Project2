@@ -5,10 +5,10 @@ package Project2.CSCI446;
  */
 public class KnowledgeBase {
 
-    private Truth wumpus = Truth.FALSE;
-    private Truth pit = Truth.MAYBE;
-    private Truth gold = Truth.MAYBE;
-    private Truth obstacle = Truth.MAYBE;
+    private Truth wumpus = Truth.FALSE; // assume a Room isn't wumpus since no smell yet
+    private Truth pit = Truth.FALSE;    // assume a Room isn't btmls pit since no breeze yet
+    private Truth gold = Truth.FALSE; //
+    private Truth obstacle = Truth.FALSE;
     private Truth empty = Truth.MAYBE;
     protected boolean visited = false;
 
