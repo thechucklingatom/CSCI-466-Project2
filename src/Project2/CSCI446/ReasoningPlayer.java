@@ -122,9 +122,30 @@ public class ReasoningPlayer extends Player{
                 //if we reach backtracking stack size 0, then we did not find an unvisited safe square
                     //in the else, we will then test dangerous squares, as they are the last places to go
             } else {
+                int counter = 0;
+                boolean keepSpiraling = true;
+                while(counter < map.length && keepSpiraling){
+                    for(int i = 0; i < counter; i++){
+                        move(direction);
+                        if(checkSurroundingRooms()){
+                            keepSpiraling = false;
+                            break;
+                        }
+                    }
 
+                    turnLeft();
+
+                    counter++;
+                }
             }
         } while (solved == false); //end of loop
+    }
+
+    public boolean checkSurroundingRooms(){
+        return !map[curX + 1][curY].visited
+                || !map[curX - 1][curY].visited
+                || !map[curX][curY + 1].visited
+                || !map[curX][curY + 1].visited;
     }
 
     public void move(Direction d){
