@@ -29,16 +29,25 @@ public class ReasoningPlayer extends Player{
     @Override
     public void solve() {
         //while loop that continues until GOAL
+            //CHECK FOR GOAL
             //get percepts
             //update the predicates of the squares around us
                 //for each adjacent, call update(map[][])
             //iterate percepts to see if we can set squares to true
             //variables if we have stink/breeze percepts
                 //call checkIfTrue(curPer)
+        //---WE ARE NOW INFERING MOVE---
+            //check if we can shoot a wumpus
+                //if true, then shoot
+            //start at the right square, check for visited
+                //if not, turn right
+                //if so, try forward, then left
+                //if all these fail, spiral outwards until you hit non-visted square
+                //REVISIT THIS IDEA FOR PATHFINDING
     }
 
     @Override
-    public void shoot() throws OutOfArrowsException {
-
+    public Percept shoot() throws OutOfArrowsException {
+        return null;
     }
 }

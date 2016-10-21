@@ -22,4 +22,11 @@ public class InferenceEngine {
         //if 3 are false
         //tell(T, p) on the 1 of
     }
+
+    public boolean canShootWumpus(int x, int y, Direction d){
+        //iterate through the squares infront of the agent
+            //if wumpus, return true
+            //if obstacle, return false
+        return false;
+    }
 }
