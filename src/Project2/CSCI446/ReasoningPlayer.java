@@ -37,26 +37,26 @@ public class ReasoningPlayer extends Player{
             map[x][y].visited = true;
             //get percepts
             //update the predicates of the squares around us
-            //for each adjacent, call update(map[][])
+                //for each adjacent, call update(map[][])
             //check for goal
-            //if Glitter(), pickUpGold() and return to end game
+                //if Glitter(), pickUpGold() and return to end game
             //iterate percepts to see if we can set squares to true
             //variables if we have stink/breeze percepts
-            //call checkIfTrue(curPer)
+                //call checkIfTrue(curPer)
             //---WE ARE NOW INFERING MOVE---
             //check if we can shoot a wumpus
-            //if true, then shoot
-            //if we're in a stink/breeze, then we BACKTRACK
-            //if we are not:
-            //start at the right square, check for visited or obstacle
-            //if not, turn right
-            //if so, try forward, then left
-            //if all these fail, spiral outwards until you hit non-visted square
-            //REVISIT THIS IDEA FOR PATHFINDING
-            //got the square, facing it, check canMove(direction)
-            //if bump, tell(T, OBSTACLE) and mark visited
-            //if death, tell(T, p[what killed you])
-            //if null, move(direction)
+                //if true, then shoot
+                //if we're in a stink/breeze, then we BACKTRACK
+                //if we are not:
+                    //start at the right square, check for visited or obstacle
+                    //if not, turn right
+                    //if so, try forward, then left
+                    //if all these fail, spiral outwards until you hit non-visted square
+                    //REVISIT THIS IDEA FOR PATHFINDING
+                    //got the square, facing it, check canMove(direction)
+                    //if bump, tell(T, OBSTACLE) and mark visited
+                    //if death, tell(T, p[what killed you])
+                    //if null, move(direction)
         } while (solved == false); //end of loop
     }
 
