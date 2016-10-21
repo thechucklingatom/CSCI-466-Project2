@@ -5,7 +5,7 @@ package Project2.CSCI446;
  */
 public class KnowledgeBase {
 
-    private Truth wumpus = Truth.MAYBE;
+    private Truth wumpus = Truth.FALSE;
     private Truth pit = Truth.MAYBE;
     private Truth gold = Truth.MAYBE;
     private Truth obstacle = Truth.MAYBE;
@@ -17,7 +17,18 @@ public class KnowledgeBase {
 
     }
     public Truth ask(RoomType p){
-        return Truth.F;
+        if (RoomType.GOLD == p) {
+            return gold;
+        } else if (RoomType.WUMPUS == p) {
+            return wumpus;
+        } else if (RoomType.PIT == p) {
+            return pit;
+        } else if (RoomType.OBSTACLE == p) {
+            return obstacle;
+        } else if (RoomType.EMPTY == p) {
+            return empty;
+        }
+        return null;
     }
 
     public void tell(Truth inTruth, RoomType roomtype){

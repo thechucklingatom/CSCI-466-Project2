@@ -17,10 +17,20 @@ public class InferenceEngine {
         //if return is MAYBE, tell(F, p)
     }
 
-    public void checkIfTrue(RoomType p){
+    public void checkIfTrue(Room p, RoomType sense){
         //ask(p) the squares around this one for p
         //if 3 are false
         //tell(T, p) on the 1 of
+
+        // get x, y position of this room
+        int x = p.getXPosition();
+        int y = p.getYPosition();
+
+        boolean left = false, right = false, up = false, down = false;
+
+        if (x > 0) { // we can check our left neighbor
+            //if (map[x-1][y].)
+        }
     }
 
     public boolean canShootWumpus(int x, int y, Direction d){
