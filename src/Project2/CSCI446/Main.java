@@ -2,6 +2,7 @@ package Project2.CSCI446;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.Random;
 
 /**
  * @author thechucklingatom
@@ -11,10 +12,14 @@ public class Main {
 	public static void main(String[] args) throws FileNotFoundException {
 		// write your code here
 
-		int worldSize = 5;
-		double wumpusProb = .1, obstacleProb = .1, pitProb = .1;
+		Random random = new Random();
 
-		PrintWriter writer = new PrintWriter("tests.csv");
+		//change this value to generate different world sizes
+		int worldSize = 25;
+
+
+		//change this to have a different file name.
+		PrintWriter writer = new PrintWriter("testsReactive" + worldSize + ".csv");
 
 		String header = "Player Type,Total Score,World Size,Wumpus Probability,Obstacle "
 				+ "Probability,Pit Probability,Total Deaths,Pit Deaths,Wumpus Deaths,"
@@ -23,12 +28,14 @@ public class Main {
 		writer.println(header);
 
 		for(int i = 0; i < 1000; i++) {
-
+			double wumpusProb = random.nextDouble(), obstacleProb = random.nextDouble(),
+					pitProb = random.nextDouble();
 			Generator generator = new Generator(worldSize, pitProb, wumpusProb, obstacleProb);
 
 			World gameWorld = new World(generator.getWorld(), generator.startXPosition(),
 					generator.startYPosition());
 
+			//change this to use the different players.
 			Player player = new ReactivePlayer(gameWorld.currentRoom(), gameWorld, gameWorld.numberOfWumpi());
 
 			player.solve();

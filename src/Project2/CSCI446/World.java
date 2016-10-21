@@ -14,6 +14,7 @@ public class World {
 		this.yLocation = yLocation;
 	}
 
+	//moves to the next room based on what direction you are going.
 	public Room move(Direction direction){
 		if(direction == Direction.EAST){
 			xLocation--;
@@ -28,6 +29,9 @@ public class World {
 		return world[xLocation][yLocation];
 	}
 
+	//this checks to see if you can move to the next room. If you die it will tell you and
+	//you handle that in your player. It will also tell you if you bump. Returns the type
+	//of the room for the player to handle
 	public RoomType canMove(Direction direction) {
 		if (direction == Direction.EAST) {
 			if(xLocation - 1 < 0){
@@ -70,6 +74,8 @@ public class World {
 		return null;
 	}
 
+	//handles all the shoot logic, checks the direction. Shoots the arrow until it hits a wall
+	//or obstacle. If it does it returns SILENCE, otherwise returns SCREAM.
 	public Percept shoot(Direction direction){
 
 		if(direction == Direction.EAST){
@@ -117,6 +123,7 @@ public class World {
 		return Percept.SILENCE;
 	}
 
+	//gets rid of the stench on the surrounding rooms so that the reasoning will know there is no wumpus
 	public void removeStenchAroundRoom(int xLocation, int yLocation){
 		if(xLocation != 0){
 			world[xLocation -1][yLocation].delPercept(Percept.SMELLY);
@@ -135,10 +142,12 @@ public class World {
 		}
 	}
 
+	//returns the currentRoom
 	public Room currentRoom(){
 		return world[xLocation][yLocation];
 	}
 
+	//counts the number of whatevers
 	public int numberOfWumpi(){
 		int numberOfWumpuses = 0;
 		for (Room[] roomArray: world) {
@@ -148,7 +157,6 @@ public class World {
 				}
 			}
 		}
-
 		return numberOfWumpuses;
 	}
 }
