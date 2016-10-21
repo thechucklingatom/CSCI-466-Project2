@@ -16,11 +16,32 @@ public class ReactivePlayer extends Player{
 
 	@Override
 	public void solve() {
+		RoomType roomMovingTo;
+		while(totalCost < 10000) {
+			roomMovingTo = world.canMove(Direction.EAST);
+
+			if(roomMovingTo == RoomType.OBSTACLE){
+				totalCost -= 1;
+				turnRight();
+			}else if(roomMovingTo == RoomType.WUMPUS){
+				totalCost -= 1000;
+				deaths.add(roomMovingTo);
+				try {
+					shoot();
+				}catch (OutOfArrowsException ex){
+					turnRight();
+				}
+			}else if(roomMovingTo == RoomType.PIT){
+				totalCost -= 1000;
+				deaths.add(roomMovingTo);
+				turnRight();
+			}
+		}
 
 	}
 
 	@Override
 	public void shoot() throws OutOfArrowsException {
-
+		world.shoot(direction);
 	}
 }
