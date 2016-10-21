@@ -118,7 +118,7 @@ public class World {
 			world[xLocation -1][yLocation].delPercept(Percept.SMELLY);
 		}
 
-		if(xLocation < world.length){
+		if(xLocation < world.length - 1){
 			world[xLocation + 1][yLocation].delPercept(Percept.SMELLY);
 		}
 
@@ -126,7 +126,7 @@ public class World {
 			world[xLocation][yLocation - 1].delPercept(Percept.SMELLY);
 		}
 
-		if(yLocation < world.length){
+		if(yLocation < world.length - 1){
 			world[xLocation][yLocation + 1].delPercept(Percept.SMELLY);
 		}
 	}

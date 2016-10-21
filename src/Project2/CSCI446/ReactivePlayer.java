@@ -28,7 +28,7 @@ public class ReactivePlayer extends Player{
 				return;
 			}
 
-			roomMovingTo = world.canMove(Direction.EAST);
+			roomMovingTo = world.canMove(direction);
 
 			if(roomMovingTo == RoomType.OBSTACLE){
 				totalCost -= 1;
@@ -46,10 +46,10 @@ public class ReactivePlayer extends Player{
 				deaths.add(roomMovingTo);
 				turn();
 			}else{
-				totalCost -= 1;
 				if(random.nextBoolean()){
 					turn();
 				}else{
+					totalCost -= 1;
 					currentRoom = world.move(direction);
 				}
 			}
