@@ -39,7 +39,7 @@ public class World {
 				return world[xLocation - 1][yLocation].getType();
 			}
 		} else if (direction == Direction.WEST) {
-			if(xLocation + 1 < 0){
+			if(xLocation + 1 == world.length){
 				return RoomType.OBSTACLE;
 			}
 			if (world[xLocation + 1][yLocation].getType() == RoomType.OBSTACLE
@@ -57,7 +57,7 @@ public class World {
 				return world[xLocation][yLocation - 1].getType();
 			}
 		} else if (direction == Direction.SOUTH) {
-			if(yLocation + 1 < 0){
+			if(yLocation + 1 == world.length){
 				return RoomType.OBSTACLE;
 			}
 			if (world[xLocation][yLocation + 1].getType() == RoomType.OBSTACLE

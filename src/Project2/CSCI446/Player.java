@@ -64,6 +64,7 @@ public abstract class Player {
 	}
 
 	public void pickUpGold(){
+		totalCost += 1000;
 		haveGold = true;
 	}
 

@@ -14,5 +14,13 @@ public class Main {
 				generator.startYPosition());
 
 		Player player = new ReactivePlayer(gameWorld.currentRoom(), gameWorld, gameWorld.numberOfWumpi());
+
+		player.solve();
+
+		System.out.println(player.totalCost);
+		for (RoomType death :
+				player.deaths) {
+			System.out.println(death);
+		}
 	}
 }
