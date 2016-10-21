@@ -117,26 +117,28 @@ public class ReasoningPlayer extends Player{
                 }
             }
             //we failed to move in a direction of an unvisited, safe square, backtrack
-            if (backtracking()) {
-                //if backtracking finds an unvisited safe square, return true
+            if(!hasMoved) {
+                if (backtracking()) {
+                    //if backtracking finds an unvisited safe square, return true
                     //means that we can now just loop again
-                //if we reach backtracking stack size 0, then we did not find an unvisited safe square
+                    //if we reach backtracking stack size 0, then we did not find an unvisited safe square
                     //in the else, we will then test dangerous squares, as they are the last places to go
-            } else {
-                int counter = 0;
-                boolean keepSpiraling = true;
-                while(counter < map.length && keepSpiraling){
-                    for(int i = 0; i < counter; i++){
-                        move(direction);
-                        if(checkSurroundingRooms()){
-                            keepSpiraling = false;
-                            break;
+                } else {
+                    int counter = 0;
+                    boolean keepSpiraling = true;
+                    while (counter < map.length && keepSpiraling) {
+                        for (int i = 0; i < counter; i++) {
+                            move(direction);
+                            if (checkSurroundingRooms()) {
+                                keepSpiraling = false;
+                                break;
+                            }
                         }
+
+                        turnLeft();
+
+                        counter++;
                     }
-
-                    turnLeft();
-
-                    counter++;
                 }
             }
         } while (solved == false); //end of loop
