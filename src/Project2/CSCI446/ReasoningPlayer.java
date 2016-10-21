@@ -97,17 +97,19 @@ public class ReasoningPlayer extends Player{
             //if we're in a stink/breeze, then we BACKTRACK
                 //if we are not:
             //start at the forward square, check for visited or obstacle
-                //if not visited or obstacle, move forward
-            //if so, try forward, then left
-            if(logic.isSafe(curX, curY, direction)){
-                RoomType nextType = world.canMove(direction);
-                if(nextType == null){
-                    world.move(direction);
-                    switch(direction){
-
+            boolean hasMoved = true;
+            if(!checkForward()){
+                turnRight();
+                //then right
+                if(!checkForward()){
+                    turnLeft();
+                    turnLeft();
+                    if(!checkForward()){
+                        hasMoved = false;
                     }
                 }
             }
+
             //if all these fail, spiral outwards until you hit non-visted square
             //REVISIT THIS IDEA FOR PATHFINDING
             //got the square, facing it, check canMove(direction)
@@ -118,7 +120,59 @@ public class ReasoningPlayer extends Player{
     }
 
     public void move(Direction d){
+        switch(d){
+            case EAST:
+                curX++;
+                break;
+            case NORTH:
+                curY++;
+                break;
+            case WEST:
+                curX--;
+                break;
+            case SOUTH:
+                curY--;
+                break;
+        }
+    }
 
+    public int[] tempMove(Direction d){
+        int[] position = {curX, curY};
+        switch (d){
+            case EAST:
+                position[0]++;
+                break;
+            case NORTH:
+                position[1]++;
+                break;
+            case WEST:
+                position[0]--;
+                break;
+            case SOUTH:
+                position[1]--;
+        }
+        return position;
+    }
+    //this will check if we can try to move forward and will return a boolean with that fact
+    //then tries to move forward
+    public boolean checkForward(){
+        int[] tempXY = tempMove(direction);
+        if(map[tempXY[0]][tempXY[1]].ask(RoomType.OBSTACLE) != Truth.TRUE &&
+                !map[tempXY[0]][tempXY[1]].visited) {
+            //if not visited or obstacle, move forward
+            //if so, try forward...
+            if (logic.isSafe(curX, curY, direction)) {
+                RoomType nextType = world.canMove(direction);
+                if (nextType == null) {
+                    world.move(direction);
+                    move(direction);
+                } else if (nextType == RoomType.OBSTACLE) {
+                    map[tempXY[0]][tempXY[1]].tell(Truth.TRUE, RoomType.OBSTACLE);
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
     public void pickUpGold(){
