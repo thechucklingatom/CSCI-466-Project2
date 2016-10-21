@@ -5,11 +5,13 @@ package Project2.CSCI446;
  */
 public class KnowledgeBase {
 
-    Truth wumpus = Truth.MAYBE;
-    Truth pit = Truth.MAYBE;
-    Truth gold = Truth.MAYBE;
-    Truth obstacle = Truth.MAYBE;
-    Truth empty = Truth.MAYBE;
+    private Truth wumpus = Truth.MAYBE;
+    private Truth pit = Truth.MAYBE;
+    private Truth gold = Truth.MAYBE;
+    private Truth obstacle = Truth.MAYBE;
+    private Truth empty = Truth.MAYBE;
+    protected boolean visited = false;
+
 
     public KnowledgeBase(){
 
