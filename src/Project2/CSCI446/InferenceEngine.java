@@ -32,10 +32,14 @@ public class InferenceEngine {
 
     }
 
+    /**
+     * Check to see if a Room is over a certain type by checking it's neighbors information
+     * @param x x-position of the Room we are examining
+     * @param y y-position of the Room we are examining
+     * @param type does that Room match the type given? update accordingly
+     */
     public void checkIfTrue(int x, int y, RoomType type){
-        //ask(type) the squares around this one for predicate pre
-        //if 3 are false
-        //tell(T, type) on the 1 of
+        // if a room is surrounded by 3 falses, can confirm that square is in fact false
 
         int numFalse = 0;
 
@@ -65,67 +69,82 @@ public class InferenceEngine {
             if(right){
                 map[x+1][y].tell(Truth.TRUE, type);
                 if(type == RoomType.WUMPUS){
-                    map[x+1][y].tell(Truth.FALSE, RoomType.PIT);
-                } else {
                     map[x+1][y].tell(Truth.FALSE, RoomType.WUMPUS);
+                } else {
+                    map[x+1][y].tell(Truth.FALSE, RoomType.PIT);
                 }
             } else if(up){
                 map[x][y+1].tell(Truth.TRUE, type);
                 if(type == RoomType.WUMPUS){
-                    map[x][y+1].tell(Truth.FALSE, RoomType.PIT);
-                } else {
                     map[x][y+1].tell(Truth.FALSE, RoomType.WUMPUS);
+                } else {
+                    map[x][y+1].tell(Truth.FALSE, RoomType.PIT);
                 }
             } else if(left){
                 map[x-1][y].tell(Truth.TRUE, type);
                 if(type == RoomType.WUMPUS){
-                    map[x-1][y].tell(Truth.FALSE, RoomType.PIT);
-                } else {
                     map[x-1][y].tell(Truth.FALSE, RoomType.WUMPUS);
+                } else {
+                    map[x-1][y].tell(Truth.FALSE, RoomType.PIT);
                 }
             } else if(down){
                 map[x][y-1].tell(Truth.TRUE, type);
                 if(type == RoomType.WUMPUS){
-                    map[x][y-1].tell(Truth.FALSE, RoomType.PIT);
-                } else {
                     map[x][y-1].tell(Truth.FALSE, RoomType.WUMPUS);
+                } else {
+                    map[x][y-1].tell(Truth.FALSE, RoomType.PIT);
                 }
             }
         }
     }
 
+    /**
+     * Checks to see if our current Room houses the Gold
+     * @param x current x-position of our Room
+     * @param y current y-position of our Room
+     * @param p current percepts present in this Room
+     * @return True/False if Gold is in this Room
+     */
     public boolean checkGold(int x, int y, Percept p){
-        if(p == Percept.GLITTER){
-            map[x][y].tell(Truth.TRUE, RoomType.GOLD);
-            return true;
+        if(p == Percept.GLITTER){   // we found gold!
+            map[x][y].tell(Truth.TRUE, RoomType.GOLD); // update knowledge base that we found gold
+            return true;    // this Room has the gold!
         }
-        map[x][y].tell(Truth.FALSE, RoomType.GOLD);
-        return false;
+        map[x][y].tell(Truth.FALSE, RoomType.GOLD); // sadly this rRoom doesn't have the gold
+        return false;   // return false
     }
 
+    /**
+     * Check to see if we are safe to move forward in this direction
+     * @param x x-coordinate of the current Room
+     * @param y y-coordinate of the current Room
+     * @param d direction explorer is currently facing
+     * @return
+     */
     public boolean isSafe(int x, int y, Direction d){
-        switch(d){
-            case EAST:
+        switch(d){  // switch on our direction
+            case EAST:  // if we are looking East into a room without Wumpus or Pit, it is safe to go!
                 if(map[x+1][y].ask(RoomType.WUMPUS) == Truth.FALSE && map[x+1][y].ask(RoomType.PIT) == Truth.FALSE){
                     return true;
                 }
                 break;
-            case NORTH:
+            case NORTH: // if we are looking North into a room without Wumpus or Pit, it is safe to go!
                 if(map[x][y+1].ask(RoomType.WUMPUS) == Truth.FALSE && map[x][y+1].ask(RoomType.PIT) == Truth.FALSE){
                     return true;
                 }
                 break;
-            case WEST:
+            case WEST:  // if we are looking West into a room without Wumpus or Pit, it is safe to go!
                 if(map[x-1][y].ask(RoomType.WUMPUS) == Truth.FALSE && map[x-1][y].ask(RoomType.PIT) == Truth.FALSE){
                     return true;
                 }
                 break;
-            case SOUTH:
+            case SOUTH: // if we are looking South into a room without Wumpus or Pit, it is safe to go!
                 if(map[x][y-1].ask(RoomType.WUMPUS) == Truth.FALSE && map[x][y-1].ask(RoomType.PIT) == Truth.FALSE){
                     return true;
                 }
                 break;
         }
+        // unknown case?  Definitely not safe!
         return false;
     }
 
@@ -142,16 +161,16 @@ public class InferenceEngine {
         // set modifiers based on players current direction
         switch(d){
             case EAST:
-                xMod = 1;
+                xMod = 1;   // +1 to x-position while flying East
                 break;
             case NORTH:
-                yMod = 1;
+                yMod = 1;   // +1 to y-position while flying North
                 break;
             case WEST:
-                xMod = -1;
+                xMod = -1;  // -1 to x-position while flying West
                 break;
             case SOUTH:
-                yMod = -1;
+                yMod = -1;  // -1 to y-position while flying South
                 break;
         }
 
@@ -185,7 +204,11 @@ public class InferenceEngine {
                 (map[x-1][y].visited && isSafe(x, y, Direction.WEST));
     }
 
+    /**
+     * Update possible Wumpus state to dead and move accordingly
+     */
     public void inferDeadWumpus(){
+        // used temporary stored x, y information to update Wumpus death
         map[tempXWumpus][tempYWumpus].tell(Truth.FALSE, RoomType.WUMPUS);
         tempXWumpus = 0;
         tempYWumpus = 0;
