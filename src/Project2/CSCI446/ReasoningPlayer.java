@@ -197,7 +197,7 @@ public class ReasoningPlayer extends Player{
             if (logic.isSafe(curX, curY, direction)) {
                 RoomType nextType = world.canMove(direction);
                 if (nextType == null) {
-                    world.move(direction);
+                    currentRoom = world.move(direction);
                     move(direction);
                     moveStack.push(Move.FORWARD);
                 } else if (nextType == RoomType.OBSTACLE) {
