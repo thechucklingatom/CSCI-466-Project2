@@ -13,7 +13,6 @@ public class ReasoningPlayer extends Player{
     private List<Percept> currentPercept;
 
     public ReasoningPlayer(int numArrows, Room inRoom, World theWorld){
-        logic = new InferenceEngine();
         arrowCount = numArrows;
         currentRoom = inRoom;
         world = theWorld;
@@ -23,15 +22,19 @@ public class ReasoningPlayer extends Player{
                 y = new KnowledgeBase();
             }
         }
+        logic = new InferenceEngine(map);
     }
 
     //when we move, make sure to update currentRoom
     @Override
     public void solve() {
         //while loop that continues until GOAL
-            //method calls to do the logic
             //get percepts
-
+            //update the predicates of the squares around us
+                //for each adjacent, call update(map[][])
+            //iterate percepts to see if we can set squares to true
+            //variables if we have stink/breeze percepts
+                //call checkIfTrue(curPer)
     }
 
     @Override
