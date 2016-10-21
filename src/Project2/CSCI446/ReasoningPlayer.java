@@ -20,9 +20,10 @@ public class ReasoningPlayer extends Player{
         currentRoom = inRoom;
         world = theWorld;
         map = new KnowledgeBase[55][55];
-        for (KnowledgeBase[] x : map) {
-            for(KnowledgeBase y : x) {
-                y = new KnowledgeBase();
+        for (int i = 0; i < map.length; i++) {
+
+            for (int i1 = 0; i1 < map.length; i1++) {
+                 map[i][i1] = new KnowledgeBase();
             }
         }
         logic = new InferenceEngine(map);

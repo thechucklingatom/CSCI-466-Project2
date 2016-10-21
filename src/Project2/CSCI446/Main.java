@@ -15,11 +15,11 @@ public class Main {
 		Random random = new Random();
 
 		//change this value to generate different world sizes
-		int worldSize = 25;
+		int worldSize = 5;
 
 
 		//change this to have a different file name.
-		PrintWriter writer = new PrintWriter("testsReactive" + worldSize + ".csv");
+		PrintWriter writer = new PrintWriter("testsReasoning" + worldSize + ".csv");
 
 		String header = "Player Type,Total Score,World Size,Wumpus Probability,Obstacle "
 				+ "Probability,Pit Probability,Total Deaths,Pit Deaths,Wumpus Deaths,"
@@ -27,7 +27,7 @@ public class Main {
 
 		writer.println(header);
 
-		for(int i = 0; i < 1000; i++) {
+		for(int i = 0; i < 1; i++) {
 			double wumpusProb = random.nextDouble(), obstacleProb = random.nextDouble(),
 					pitProb = random.nextDouble();
 			Generator generator = new Generator(worldSize, pitProb, wumpusProb, obstacleProb);
@@ -36,7 +36,7 @@ public class Main {
 					generator.startYPosition());
 
 			//change this to use the different players.
-			Player player = new ReactivePlayer(gameWorld.currentRoom(), gameWorld, gameWorld.numberOfWumpi());
+			Player player = new ReasoningPlayer(gameWorld.numberOfWumpi(), gameWorld.currentRoom(), gameWorld );
 
 			player.solve();
 
