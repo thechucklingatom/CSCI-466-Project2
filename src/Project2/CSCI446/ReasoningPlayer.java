@@ -235,7 +235,9 @@ public class ReasoningPlayer extends Player{
         return false;
     }
 
+    @Override
     public void pickUpGold(){
+        super.pickUpGold();
         solved = true;
     }
 

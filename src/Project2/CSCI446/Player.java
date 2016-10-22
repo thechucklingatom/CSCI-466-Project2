@@ -13,7 +13,7 @@ public abstract class Player {
 	public boolean haveGold = false;
 	public int arrowCount;
 	//Win +1000, die -1000, move/turn -1, fire arrow -10, kill wumpus +10
-	public int totalCost;
+	public int totalCost = 0;
 	public List<RoomType> deaths = new ArrayList<RoomType>();
 	public Direction direction = Direction.EAST;
 	public Room currentRoom;
