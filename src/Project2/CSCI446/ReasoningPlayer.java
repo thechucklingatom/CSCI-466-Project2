@@ -3,6 +3,7 @@ package Project2.CSCI446;
 import Exceptions.OutOfArrowsException;
 
 import java.util.List;
+import java.util.Stack;
 
 /**
  * Created by Alan Fraticelli on 10/20/2016.
@@ -14,6 +15,7 @@ public class ReasoningPlayer extends Player{
     private int curY;
     private List<Percept> currentPercept;
     private boolean solved = false;
+    private Stack<Move> moveStack;
 
     public ReasoningPlayer(int numArrows, Room inRoom, World theWorld){
         arrowCount = numArrows;
@@ -29,6 +31,7 @@ public class ReasoningPlayer extends Player{
         logic = new InferenceEngine(map);
         curX = 26;
         curY = 26;
+        moveStack = new Stack<Move>();
     }
 
     //when we move, make sure to update currentRoom
@@ -52,45 +55,46 @@ public class ReasoningPlayer extends Player{
                 if (percept == Percept.WINDY) {
                     windy = true;
                 } //check for the goal state
-                if (logic.checkGold(curX, curY, percept)){
+                if (logic.checkGold(curX, curY, percept)) {
                     glitter = true;
                     pickUpGold();
                     return;
                 }
             }
             //for each adjacent, call update(map[][], p) where p is a false windy/smelly
-            if(!smelly){
-                logic.update(map[curX+1][curY], Percept.SMELLY);
-                logic.update(map[curX][curY+1], Percept.SMELLY);
-                logic.update(map[curX-1][curY], Percept.SMELLY);
-                logic.update(map[curX][curY-1], Percept.SMELLY);
+            if (!smelly) {
+                logic.update(map[curX + 1][curY], Percept.SMELLY);
+                logic.update(map[curX][curY + 1], Percept.SMELLY);
+                logic.update(map[curX - 1][curY], Percept.SMELLY);
+                logic.update(map[curX][curY - 1], Percept.SMELLY);
             }
-            if(!windy){
-                logic.update(map[curX+1][curY], Percept.WINDY);
-                logic.update(map[curX][curY+1], Percept.WINDY);
-                logic.update(map[curX-1][curY], Percept.WINDY);
-                logic.update(map[curX][curY-1], Percept.WINDY);
+            if (!windy) {
+                logic.update(map[curX + 1][curY], Percept.WINDY);
+                logic.update(map[curX][curY + 1], Percept.WINDY);
+                logic.update(map[curX - 1][curY], Percept.WINDY);
+                logic.update(map[curX][curY - 1], Percept.WINDY);
             }
             //iterate percepts to see if we can set squares to-
             //true variables if we have stink/breeze percepts
-            for(Percept percept : currentPercept){
-                if(smelly){
+            for (Percept percept : currentPercept) {
+                if (smelly) {
                     logic.checkIfTrue(curX, curY, RoomType.WUMPUS);
                 }
-                if(windy){
+                if (windy) {
                     logic.checkIfTrue(curX, curY, RoomType.PIT);
                 }
             }
             //---WE ARE NOW INFERING MOVE---
             //check if we can shoot a wumpus
             Percept success = null;
-            if(logic.canShootWumpus(curX, curY, direction) && arrowCount != 0) {
+            if (logic.canShootWumpus(curX, curY, direction) && arrowCount != 0) {
                 //if true, then shoot
-                try{
+                try {
                     success = shoot();
-                } catch (OutOfArrowsException e){}
+                } catch (OutOfArrowsException e) {
+                }
                 arrowCount--;
-                if(success == Percept.SCREAM){
+                if (success == Percept.SCREAM) {
                     logic.inferDeadWumpus();
                 }
             }
@@ -98,28 +102,57 @@ public class ReasoningPlayer extends Player{
             //if we are not:
             //start at the forward square, check for visited or obstacle
             boolean hasMoved = true;
-            if(!checkForward()){
+            if (!checkForward()) {
                 turnRight();
+                moveStack.push(Move.TURNRIGHT);
                 //then right
-                if(!checkForward()){
+                if (!checkForward()) {
                     turnLeft();
                     turnLeft();
-                    if(!checkForward()){
+                    moveStack.push(Move.TURNLEFT);
+                    moveStack.push(Move.TURNLEFT);
+                    if (!checkForward()) {
                         hasMoved = false;
                     }
                 }
             }
+            //we failed to move in a direction of an unvisited, safe square, backtrack
+            if(!hasMoved) {
+                if (backtracking()) {
+                    //if backtracking finds an unvisited safe square, return true
+                    //means that we can now just loop again
+                    //if we reach backtracking stack size 0, then we did not find an unvisited safe square
+                    //in the else, we will then test dangerous squares, as they are the last places to go
+                } else {
+                    int counter = 0;
+                    boolean keepSpiraling = true;
+                    while (counter < map.length && keepSpiraling) {
+                        for (int i = 0; i < counter; i++) {
+                            move(direction);
+                            if (checkSurroundingRooms()) {
+                                keepSpiraling = false;
+                                break;
+                            }
+                        }
 
-            //if all these fail, spiral outwards until you hit non-visted square
-            //REVISIT THIS IDEA FOR PATHFINDING
-            //got the square, facing it, check canMove(direction)
-            //if bump, tell(T, OBSTACLE) and mark visited
-            //if death, tell(T, p[what killed you])
-            //if null, move(direction)
+                        turnLeft();
+
+                        counter++;
+                    }
+                }
+            }
         } while (solved == false); //end of loop
     }
 
+    public boolean checkSurroundingRooms(){
+        return !map[curX + 1][curY].visited
+                || !map[curX - 1][curY].visited
+                || !map[curX][curY + 1].visited
+                || !map[curX][curY + 1].visited;
+    }
+
     public void move(Direction d){
+        totalCost -= 1;
         switch(d){
             case EAST:
                 curX++;
@@ -164,13 +197,40 @@ public class ReasoningPlayer extends Player{
             if (logic.isSafe(curX, curY, direction)) {
                 RoomType nextType = world.canMove(direction);
                 if (nextType == null) {
-                    world.move(direction);
+                    currentRoom = world.move(direction);
                     move(direction);
+                    moveStack.push(Move.FORWARD);
                 } else if (nextType == RoomType.OBSTACLE) {
                     map[tempXY[0]][tempXY[1]].tell(Truth.TRUE, RoomType.OBSTACLE);
+                    map[tempXY[0]][tempXY[1]].tell(Truth.FALSE, RoomType.WUMPUS);
+                    map[tempXY[0]][tempXY[1]].tell(Truth.FALSE, RoomType.PIT);
                 }
             }
             return true;
+        }
+        return false;
+    }
+
+    public boolean backtracking(){
+        //we turn left once more to face the opposite direction of where we were going
+        turnLeft();
+        while(!moveStack.empty()){
+            Move curMove = moveStack.pop();
+            switch(curMove){
+                case FORWARD:
+                    world.move(direction);
+                    move(direction);
+                    if(logic.nearUnvisited(curX, curY)){
+                        return true;
+                    }
+                    break;
+                case TURNLEFT:
+                    turnRight();
+                    break;
+                case TURNRIGHT:
+                    turnLeft();
+                    break;
+            }
         }
         return false;
     }
