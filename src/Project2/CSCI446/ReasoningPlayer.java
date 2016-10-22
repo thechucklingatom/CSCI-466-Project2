@@ -129,6 +129,7 @@ public class ReasoningPlayer extends Player{
                     while (counter < map.length && keepSpiraling) {
                         for (int i = 0; i < counter; i++) {
                             move(direction);
+                            currentRoom = world.move(direction);
                             if (checkSurroundingRooms()) {
                                 keepSpiraling = false;
                                 break;
@@ -205,8 +206,8 @@ public class ReasoningPlayer extends Player{
                     map[tempXY[0]][tempXY[1]].tell(Truth.FALSE, RoomType.WUMPUS);
                     map[tempXY[0]][tempXY[1]].tell(Truth.FALSE, RoomType.PIT);
                 }
+                return true;
             }
-            return true;
         }
         return false;
     }
@@ -218,7 +219,7 @@ public class ReasoningPlayer extends Player{
             Move curMove = moveStack.pop();
             switch(curMove){
                 case FORWARD:
-                    world.move(direction);
+                    currentRoom = world.move(direction);
                     move(direction);
                     if(logic.nearUnvisited(curX, curY)){
                         return true;
