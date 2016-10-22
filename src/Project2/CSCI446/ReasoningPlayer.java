@@ -201,12 +201,12 @@ public class ReasoningPlayer extends Player{
                     currentRoom = world.move(direction);
                     move(direction);
                     moveStack.push(Move.FORWARD);
+                    return true;
                 } else if (nextType == RoomType.OBSTACLE) {
                     map[tempXY[0]][tempXY[1]].tell(Truth.TRUE, RoomType.OBSTACLE);
                     map[tempXY[0]][tempXY[1]].tell(Truth.FALSE, RoomType.WUMPUS);
                     map[tempXY[0]][tempXY[1]].tell(Truth.FALSE, RoomType.PIT);
                 }
-                return true;
             }
         }
         return false;
