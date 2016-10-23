@@ -130,6 +130,7 @@ public class ReasoningPlayer extends Player{
                         for (int i = 0; i < counter; i++) {
                             move(direction);
                             currentRoom = world.move(direction);
+                            moveStack.push(Move.FORWARD);
                             if (checkSurroundingRooms()) {
                                 keepSpiraling = false;
                                 break;
@@ -137,6 +138,7 @@ public class ReasoningPlayer extends Player{
                         }
 
                         turnLeft();
+                        moveStack.push(Move.TURNLEFT);
 
                         counter++;
                     }
@@ -213,7 +215,8 @@ public class ReasoningPlayer extends Player{
     }
 
     public boolean backtracking(){
-        //we turn left once more to face the opposite direction of where we were going
+        //turn left twice to always do a 180. Since the original turns will be undone.
+        turnLeft();
         turnLeft();
         while(!moveStack.empty()){
             Move curMove = moveStack.pop();
