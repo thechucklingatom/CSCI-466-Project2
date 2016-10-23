@@ -229,6 +229,8 @@ public class ReasoningPlayer extends Player{
                     currentRoom = world.move(direction);
                     move(direction);
                     if(logic.nearUnvisited(curX, curY)){
+                        turnLeft();
+                        turnLeft();
                         return true;
                     }
                     break;
@@ -240,6 +242,8 @@ public class ReasoningPlayer extends Player{
                     break;
             }
         }
+        turnLeft();
+        turnLeft();
         return false;
     }
 
