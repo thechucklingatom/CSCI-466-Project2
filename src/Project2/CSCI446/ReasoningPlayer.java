@@ -2,6 +2,7 @@ package Project2.CSCI446;
 
 import Exceptions.OutOfArrowsException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
@@ -14,6 +15,7 @@ public class ReasoningPlayer extends Player{
     private int curX;
     private int curY;
     private List<Percept> currentPercept;
+    private boolean solved = false;
     private Stack<Move> moveStack;
 
     public ReasoningPlayer(int numArrows, Room inRoom, World theWorld){
@@ -40,6 +42,10 @@ public class ReasoningPlayer extends Player{
         do {
             //mark visited
             map[curX][curY].visited = true;
+            map[curX][curY].tell(Truth.TRUE, RoomType.EMPTY);
+            map[curX][curY].tell(Truth.FALSE, RoomType.OBSTACLE);
+            map[curX][curY].tell(Truth.FALSE, RoomType.PIT);
+            map[curX][curY].tell(Truth.FALSE, RoomType.WUMPUS);
             //get percepts
             currentPercept = currentRoom.getPercepts();
 
@@ -134,8 +140,39 @@ public class ReasoningPlayer extends Player{
                                 move(direction);
                                 currentRoom = world.move(direction);
                                 moveStack.push(Move.FORWARD);
-                                totalCost++;
-                                if (checkSurroundingRooms()) {
+                                List<Direction> directionsOfUnvisted = checkSurroundingRooms();
+                                if (directionsOfUnvisted.size() > 0) {
+                                    boolean done = false;
+                                    for(Direction direction : directionsOfUnvisted){
+                                        turnToFace(direction);
+                                        int[] nextRoom;
+                                        switch(world.canMove(direction) == null ? RoomType.EMPTY : world.canMove(direction)){
+                                            case OBSTACLE:
+                                                nextRoom = tempMove(direction);
+                                                map[nextRoom[0]][nextRoom[1]].tell(Truth.TRUE, RoomType.OBSTACLE);
+                                                break;
+                                            case WUMPUS:
+                                                nextRoom = tempMove(direction);
+                                                map[nextRoom[0]][nextRoom[1]].tell(Truth.TRUE, RoomType.WUMPUS);
+                                                deaths.add(RoomType.WUMPUS);
+                                                totalCost -= 1000;
+                                                break;
+                                            case PIT:
+                                                nextRoom = tempMove(direction);
+                                                map[nextRoom[0]][nextRoom[1]].tell(Truth.TRUE, RoomType.PIT);
+                                                deaths.add(RoomType.PIT);
+                                                totalCost -= 1000;
+                                                break;
+                                            default:
+                                                move(direction);
+                                                world.move(direction);
+                                                done = true;
+                                        }
+
+                                        if(done){
+                                            break;
+                                        }
+                                    }
                                     keepSpiraling = false;
                                     break;
                                 }
@@ -154,11 +191,25 @@ public class ReasoningPlayer extends Player{
         } while (haveGold == false); //end of loop
     }
 
-    public boolean checkSurroundingRooms(){
-        return !map[curX + 1][curY].visited
-                || !map[curX - 1][curY].visited
-                || !map[curX][curY + 1].visited
-                || !map[curX][curY + 1].visited;
+    public List<Direction> checkSurroundingRooms(){
+        ArrayList<Direction> toReturn = new ArrayList();
+         if(!map[curX + 1][curY].visited){
+             toReturn.add(Direction.EAST);
+         }
+
+         if(!map[curX - 1][curY].visited){
+             toReturn.add(Direction.WEST);
+         }
+
+         if(!map[curX][curY + 1].visited){
+             toReturn.add(Direction.SOUTH);
+         }
+
+         if(!map[curX][curY - 1].visited){
+             toReturn.add(Direction.NORTH);
+         }
+
+        return toReturn;
     }
 
     public void move(Direction d){
@@ -236,6 +287,8 @@ public class ReasoningPlayer extends Player{
                     move(direction);
                     totalCost++;
                     if(logic.nearUnvisited(curX, curY)){
+                        turnLeft();
+                        turnLeft();
                         return true;
                     }
                     break;
@@ -249,11 +302,20 @@ public class ReasoningPlayer extends Player{
                     break;
             }
         }
+        turnLeft();
+        turnLeft();
         return false;
     }
 
     @Override
     public Percept shoot() throws OutOfArrowsException {
         return world.shoot(direction);
+    }
+
+    public void turnToFace(Direction direction){
+        while(direction != this.direction){
+            turnLeft();
+            moveStack.push(Move.TURNLEFT);
+        }
     }
 }

@@ -29,7 +29,6 @@ public class InferenceEngine {
                 base.tell(Truth.FALSE, RoomType.PIT);
             }
         }
-
     }
 
     /**
