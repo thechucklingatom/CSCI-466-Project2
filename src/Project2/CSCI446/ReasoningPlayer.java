@@ -128,11 +128,15 @@ public class ReasoningPlayer extends Player{
                     boolean keepSpiraling = true;
                     while (counter < map.length && keepSpiraling) {
                         for (int i = 0; i < counter; i++) {
-                            move(direction);
-                            currentRoom = world.move(direction);
-                            moveStack.push(Move.FORWARD);
-                            if (checkSurroundingRooms()) {
-                                keepSpiraling = false;
+                            if(world.canMove(direction) == null) {
+                                move(direction);
+                                currentRoom = world.move(direction);
+                                moveStack.push(Move.FORWARD);
+                                if (checkSurroundingRooms()) {
+                                    keepSpiraling = false;
+                                    break;
+                                }
+                            }else{
                                 break;
                             }
                         }
