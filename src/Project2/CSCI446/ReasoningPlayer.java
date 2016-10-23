@@ -120,7 +120,11 @@ public class ReasoningPlayer extends Player{
                     totalCost--;
                     totalCost--;
                     if (!checkForward()) {
-                        hasMoved = false;
+                        turnLeft();
+                        totalCost--;
+                        if(!checkForward()) {
+                            hasMoved = false;
+                        }
                     }
                 }
             }
@@ -139,10 +143,9 @@ public class ReasoningPlayer extends Player{
                             if(world.canMove(direction) == null) {
                                 move(direction);
                                 currentRoom = world.move(direction);
-                                map[curX][curY].visited = true;
                                 moveStack.push(Move.FORWARD);
                                 List<Direction> directionsOfUnvisted = checkSurroundingRooms();
-                                if (directionsOfUnvisted.size() > 0) {
+                                if (map[curX][curY].visited) {
                                     boolean done = false;
                                     for(Direction direction : directionsOfUnvisted){
                                         /*turnToFace(direction);
@@ -177,6 +180,7 @@ public class ReasoningPlayer extends Player{
                                     keepSpiraling = false;
                                     break;
                                 }else{
+                                    map[curX][curY].visited = true;
                                     break;
                                 }
                             }
