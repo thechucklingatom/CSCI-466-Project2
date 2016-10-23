@@ -17,9 +17,9 @@ public class World {
 	//moves to the next room based on what direction you are going.
 	public Room move(Direction direction){
 		if(direction == Direction.EAST){
-			xLocation--;
-		}else if(direction == Direction.WEST){
 			xLocation++;
+		}else if(direction == Direction.WEST){
+			xLocation--;
 		}else if(direction == Direction.NORTH){
 			yLocation--;
 		}else if(direction == Direction.SOUTH){
@@ -37,19 +37,19 @@ public class World {
 			if(xLocation - 1 < 0){
 				return RoomType.OBSTACLE;
 			}
-			if (world[xLocation - 1][yLocation].getType() == RoomType.OBSTACLE
-					|| world[xLocation - 1][yLocation].getType() == RoomType.WUMPUS
-					|| world[xLocation - 1][yLocation].getType() == RoomType.PIT) {
-				return world[xLocation - 1][yLocation].getType();
+			if (world[xLocation + 1][yLocation].getType() == RoomType.OBSTACLE
+					|| world[xLocation + 1][yLocation].getType() == RoomType.WUMPUS
+					|| world[xLocation + 1][yLocation].getType() == RoomType.PIT) {
+				return world[xLocation + 1][yLocation].getType();
 			}
 		} else if (direction == Direction.WEST) {
 			if(xLocation + 1 == world.length){
 				return RoomType.OBSTACLE;
 			}
-			if (world[xLocation + 1][yLocation].getType() == RoomType.OBSTACLE
-					|| world[xLocation + 1][yLocation].getType() == RoomType.WUMPUS
-					|| world[xLocation + 1][yLocation].getType() == RoomType.PIT) {
-				return world[xLocation + 1][yLocation].getType();
+			if (world[xLocation - 1][yLocation].getType() == RoomType.OBSTACLE
+					|| world[xLocation - 1][yLocation].getType() == RoomType.WUMPUS
+					|| world[xLocation - 1][yLocation].getType() == RoomType.PIT) {
+				return world[xLocation - 1][yLocation].getType();
 			}
 		} else if (direction == Direction.NORTH) {
 			if(yLocation - 1 < 0){
@@ -79,7 +79,7 @@ public class World {
 	public Percept shoot(Direction direction){
 
 		if(direction == Direction.EAST){
-			for(int iter = xLocation; iter >= 0; iter--){
+			for(int iter = xLocation; iter < world.length; iter++){
 				if(world[iter][yLocation].getType() == RoomType.OBSTACLE){
 					return Percept.SILENCE;
 				}else if(world[iter][yLocation].getType() == RoomType.WUMPUS){
@@ -89,7 +89,7 @@ public class World {
 				}
 			}
 		}else if(direction == Direction.WEST){
-			for(int iter = xLocation; iter < world.length; iter++){
+			for(int iter = xLocation; iter >= 0; iter--){
 				if(world[iter][yLocation].getType() == RoomType.OBSTACLE){
 					return Percept.SILENCE;
 				}else if(world[iter][yLocation].getType() == RoomType.WUMPUS){
