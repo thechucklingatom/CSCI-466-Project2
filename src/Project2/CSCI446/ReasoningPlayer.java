@@ -14,7 +14,6 @@ public class ReasoningPlayer extends Player{
     private int curX;
     private int curY;
     private List<Percept> currentPercept;
-    private boolean solved = false;
     private Stack<Move> moveStack;
 
     public ReasoningPlayer(int numArrows, Room inRoom, World theWorld){
@@ -105,12 +104,15 @@ public class ReasoningPlayer extends Player{
             if (!checkForward()) {
                 turnRight();
                 moveStack.push(Move.TURNRIGHT);
+                totalCost++;
                 //then right
                 if (!checkForward()) {
                     turnLeft();
                     turnLeft();
                     moveStack.push(Move.TURNLEFT);
                     moveStack.push(Move.TURNLEFT);
+                    totalCost++;
+                    totalCost++;
                     if (!checkForward()) {
                         hasMoved = false;
                     }
@@ -132,6 +134,7 @@ public class ReasoningPlayer extends Player{
                                 move(direction);
                                 currentRoom = world.move(direction);
                                 moveStack.push(Move.FORWARD);
+                                totalCost++;
                                 if (checkSurroundingRooms()) {
                                     keepSpiraling = false;
                                     break;
@@ -143,12 +146,12 @@ public class ReasoningPlayer extends Player{
 
                         turnLeft();
                         moveStack.push(Move.TURNLEFT);
-
+                        totalCost++;
                         counter++;
                     }
                 }
             }
-        } while (solved == false); //end of loop
+        } while (haveGold == false); //end of loop
     }
 
     public boolean checkSurroundingRooms(){
@@ -207,6 +210,7 @@ public class ReasoningPlayer extends Player{
                     currentRoom = world.move(direction);
                     move(direction);
                     moveStack.push(Move.FORWARD);
+                    totalCost++;
                     return true;
                 } else if (nextType == RoomType.OBSTACLE) {
                     map[tempXY[0]][tempXY[1]].tell(Truth.TRUE, RoomType.OBSTACLE);
@@ -222,31 +226,30 @@ public class ReasoningPlayer extends Player{
         //turn left twice to always do a 180. Since the original turns will be undone.
         turnLeft();
         turnLeft();
+        totalCost++;
+        totalCost++;
         while(!moveStack.empty()){
             Move curMove = moveStack.pop();
             switch(curMove){
                 case FORWARD:
                     currentRoom = world.move(direction);
                     move(direction);
+                    totalCost++;
                     if(logic.nearUnvisited(curX, curY)){
                         return true;
                     }
                     break;
                 case TURNLEFT:
                     turnRight();
+                    totalCost++;
                     break;
                 case TURNRIGHT:
                     turnLeft();
+                    totalCost++;
                     break;
             }
         }
         return false;
-    }
-
-    @Override
-    public void pickUpGold(){
-        super.pickUpGold();
-        solved = true;
     }
 
     @Override
