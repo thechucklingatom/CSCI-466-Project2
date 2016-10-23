@@ -120,7 +120,11 @@ public class ReasoningPlayer extends Player{
                     totalCost--;
                     totalCost--;
                     if (!checkForward()) {
-                        hasMoved = false;
+                        turnLeft();
+                        totalCost--;
+                        if(!checkForward()) {
+                            hasMoved = false;
+                        }
                     }
                 }
             }
@@ -141,10 +145,10 @@ public class ReasoningPlayer extends Player{
                                 currentRoom = world.move(direction);
                                 moveStack.push(Move.FORWARD);
                                 List<Direction> directionsOfUnvisted = checkSurroundingRooms();
-                                if (directionsOfUnvisted.size() > 0) {
+                                if (map[curX][curY].visited) {
                                     boolean done = false;
                                     for(Direction direction : directionsOfUnvisted){
-                                        turnToFace(direction);
+                                        /*turnToFace(direction);
                                         int[] nextRoom;
                                         switch(world.canMove(direction) == null ? RoomType.EMPTY : world.canMove(direction)){
                                             case OBSTACLE:
@@ -166,18 +170,19 @@ public class ReasoningPlayer extends Player{
                                             default:
                                                 move(direction);
                                                 world.move(direction);
-                                                done = true;
-                                        }
+                                                done = true;*/
+                                        //}
 
-                                        if(done){
-                                            break;
-                                        }
+                                        //if(done){
+                                        //    break;
+                                        //}
                                     }
                                     keepSpiraling = false;
                                     break;
+                                }else{
+                                    map[curX][curY].visited = true;
+                                    break;
                                 }
-                            }else{
-                                break;
                             }
                         }
 
@@ -201,11 +206,11 @@ public class ReasoningPlayer extends Player{
              toReturn.add(Direction.WEST);
          }
 
-         if(!map[curX][curY + 1].visited){
+         if(!map[curX][curY - 1].visited){
              toReturn.add(Direction.SOUTH);
          }
 
-         if(!map[curX][curY - 1].visited){
+         if(!map[curX][curY + 1].visited){
              toReturn.add(Direction.NORTH);
          }
 
@@ -261,11 +266,14 @@ public class ReasoningPlayer extends Player{
                     currentRoom = world.move(direction);
                     move(direction);
                     moveStack.push(Move.FORWARD);
+                    totalCost--;
                     return true;
                 } else if (nextType == RoomType.OBSTACLE) {
                     map[tempXY[0]][tempXY[1]].tell(Truth.TRUE, RoomType.OBSTACLE);
                     map[tempXY[0]][tempXY[1]].tell(Truth.FALSE, RoomType.WUMPUS);
                     map[tempXY[0]][tempXY[1]].tell(Truth.FALSE, RoomType.PIT);
+                    map[tempXY[0]][tempXY[1]].visited = true;
+                    totalCost--;
                 }
             }
         }
@@ -284,11 +292,10 @@ public class ReasoningPlayer extends Player{
                 case FORWARD:
                     currentRoom = world.move(direction);
                     move(direction);
+                    totalCost--;
                     if(logic.nearUnvisited(curX, curY)){
                         turnLeft();
                         turnLeft();
-                        totalCost--;
-                        totalCost--;
                         return true;
                     }
                     break;
@@ -304,7 +311,6 @@ public class ReasoningPlayer extends Player{
         }
         turnLeft();
         turnLeft();
-        totalCost -= 2;
         return false;
     }
 

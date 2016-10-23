@@ -29,7 +29,7 @@ public class Main {
 		writer.println(header);
 
 		//run 1000 tests to see how they work, and the averages
-		for(int i = 0; i < 10; i++) {
+		for(int i = 0; i < 5; i++) {
 			//random probability for each world
 			double wumpusProb = .3, obstacleProb = .3,
 					pitProb = .3;
