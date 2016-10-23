@@ -34,7 +34,7 @@ public class World {
 	//of the room for the player to handle
 	public RoomType canMove(Direction direction) {
 		if (direction == Direction.EAST) {
-			if(xLocation - 1 < 0){
+			if(xLocation + 1 == world.length){
 				return RoomType.OBSTACLE;
 			}
 			if (world[xLocation + 1][yLocation].getType() == RoomType.OBSTACLE
@@ -43,7 +43,7 @@ public class World {
 				return world[xLocation + 1][yLocation].getType();
 			}
 		} else if (direction == Direction.WEST) {
-			if(xLocation + 1 == world.length){
+			if(xLocation - 1 < 0){
 				return RoomType.OBSTACLE;
 			}
 			if (world[xLocation - 1][yLocation].getType() == RoomType.OBSTACLE
