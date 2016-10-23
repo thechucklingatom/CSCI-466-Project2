@@ -110,15 +110,15 @@ public class ReasoningPlayer extends Player{
             if (!checkForward()) {
                 turnRight();
                 moveStack.push(Move.TURNRIGHT);
-                totalCost++;
+                totalCost--;
                 //then right
                 if (!checkForward()) {
                     turnLeft();
                     turnLeft();
                     moveStack.push(Move.TURNLEFT);
                     moveStack.push(Move.TURNLEFT);
-                    totalCost++;
-                    totalCost++;
+                    totalCost--;
+                    totalCost--;
                     if (!checkForward()) {
                         hasMoved = false;
                     }
@@ -183,7 +183,7 @@ public class ReasoningPlayer extends Player{
 
                         turnLeft();
                         moveStack.push(Move.TURNLEFT);
-                        totalCost++;
+                        totalCost--;
                         counter++;
                     }
                 }
@@ -261,7 +261,6 @@ public class ReasoningPlayer extends Player{
                     currentRoom = world.move(direction);
                     move(direction);
                     moveStack.push(Move.FORWARD);
-                    totalCost++;
                     return true;
                 } else if (nextType == RoomType.OBSTACLE) {
                     map[tempXY[0]][tempXY[1]].tell(Truth.TRUE, RoomType.OBSTACLE);
@@ -277,33 +276,35 @@ public class ReasoningPlayer extends Player{
         //turn left twice to always do a 180. Since the original turns will be undone.
         turnLeft();
         turnLeft();
-        totalCost++;
-        totalCost++;
+        totalCost--;
+        totalCost--;
         while(!moveStack.empty()){
             Move curMove = moveStack.pop();
             switch(curMove){
                 case FORWARD:
                     currentRoom = world.move(direction);
                     move(direction);
-                    totalCost++;
                     if(logic.nearUnvisited(curX, curY)){
                         turnLeft();
                         turnLeft();
+                        totalCost--;
+                        totalCost--;
                         return true;
                     }
                     break;
                 case TURNLEFT:
                     turnRight();
-                    totalCost++;
+                    totalCost--;
                     break;
                 case TURNRIGHT:
                     turnLeft();
-                    totalCost++;
+                    totalCost--;
                     break;
             }
         }
         turnLeft();
         turnLeft();
+        totalCost -= 2;
         return false;
     }
 
