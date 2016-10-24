@@ -197,10 +197,10 @@ public class InferenceEngine {
      */
     public boolean nearUnvisited(int x, int y) {
         // check the adjacent squares for possible unvisited and safe Rooms
-        return (map[x][y+1].visited && isSafe(x, y, Direction.NORTH)) ||
-                (map[x+1][y].visited && isSafe(x, y, Direction.EAST)) ||
-                (map[x][y-1].visited && isSafe(x, y, Direction.SOUTH)) ||
-                (map[x-1][y].visited && isSafe(x, y, Direction.WEST));
+        return (!map[x][y+1].visited && isSafe(x, y, Direction.NORTH)) ||
+                (!map[x+1][y].visited && isSafe(x, y, Direction.EAST)) ||
+                (!map[x][y-1].visited && isSafe(x, y, Direction.SOUTH)) ||
+                (!map[x-1][y].visited && isSafe(x, y, Direction.WEST));
     }
 
     /**
