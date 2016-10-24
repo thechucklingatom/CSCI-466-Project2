@@ -1,5 +1,8 @@
 package Project2.CSCI446;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by thechucklingatom on 10/18/2016.
  */
@@ -7,11 +10,14 @@ public class World {
 	Room[][] world;
 	int xLocation;
 	int yLocation;
+	int wumpusesKilled = 0;
+	List<Room> roomsExplored;
 
 	public World(Room[][] world, int xLocation, int yLocation){
 		this.world = world;
 		this.xLocation = xLocation;
 		this.yLocation = yLocation;
+		roomsExplored = new ArrayList();
 	}
 
 	//moves to the next room based on what direction you are going.
@@ -37,6 +43,9 @@ public class World {
 			if(xLocation + 1 == world.length){
 				return RoomType.OBSTACLE;
 			}
+			if(!roomsExplored.contains((world[xLocation + 1][yLocation]))){
+				roomsExplored.add((world[xLocation + 1][yLocation]));
+			}
 			if (world[xLocation + 1][yLocation].getType() == RoomType.OBSTACLE
 					|| world[xLocation + 1][yLocation].getType() == RoomType.WUMPUS
 					|| world[xLocation + 1][yLocation].getType() == RoomType.PIT) {
@@ -45,6 +54,9 @@ public class World {
 		} else if (direction == Direction.WEST) {
 			if(xLocation - 1 < 0){
 				return RoomType.OBSTACLE;
+			}
+			if(!roomsExplored.contains((world[xLocation - 1][yLocation]))){
+				roomsExplored.add((world[xLocation - 1][yLocation]));
 			}
 			if (world[xLocation - 1][yLocation].getType() == RoomType.OBSTACLE
 					|| world[xLocation - 1][yLocation].getType() == RoomType.WUMPUS
@@ -55,6 +67,9 @@ public class World {
 			if(yLocation - 1 < 0){
 				return RoomType.OBSTACLE;
 			}
+			if(!roomsExplored.contains((world[xLocation][yLocation - 1]))){
+				roomsExplored.add((world[xLocation][yLocation - 1]));
+			}
 			if (world[xLocation][yLocation - 1].getType() == RoomType.OBSTACLE
 					|| world[xLocation][yLocation - 1].getType() == RoomType.WUMPUS
 					|| world[xLocation][yLocation - 1].getType() == RoomType.PIT) {
@@ -63,6 +78,9 @@ public class World {
 		} else if (direction == Direction.SOUTH) {
 			if(yLocation + 1 == world.length){
 				return RoomType.OBSTACLE;
+			}
+			if(!roomsExplored.contains((world[xLocation][yLocation + 1]))){
+				roomsExplored.add((world[xLocation][yLocation + 1]));
 			}
 			if (world[xLocation][yLocation + 1].getType() == RoomType.OBSTACLE
 					|| world[xLocation][yLocation + 1].getType() == RoomType.WUMPUS
@@ -85,6 +103,7 @@ public class World {
 				}else if(world[iter][yLocation].getType() == RoomType.WUMPUS){
 					removeStenchAroundRoom(iter, yLocation);
 					world[iter][yLocation].setType(RoomType.EMPTY);
+					wumpusesKilled++;
 					return Percept.SCREAM;
 				}
 			}
@@ -95,6 +114,7 @@ public class World {
 				}else if(world[iter][yLocation].getType() == RoomType.WUMPUS){
 					removeStenchAroundRoom(iter, yLocation);
 					world[iter][yLocation].setType(RoomType.EMPTY);
+					wumpusesKilled++;
 					return Percept.SCREAM;
 				}
 			}
@@ -105,6 +125,7 @@ public class World {
 				}else if(world[xLocation][iter].getType() == RoomType.WUMPUS){
 					removeStenchAroundRoom(xLocation, iter);
 					world[xLocation][iter].setType(RoomType.EMPTY);
+					wumpusesKilled++;
 					return Percept.SCREAM;
 				}
 			}
@@ -115,6 +136,7 @@ public class World {
 				}else if(world[xLocation][iter].getType() == RoomType.WUMPUS){
 					removeStenchAroundRoom(xLocation, iter);
 					world[xLocation][iter].setType(RoomType.EMPTY);
+					wumpusesKilled++;
 					return Percept.SCREAM;
 				}
 			}

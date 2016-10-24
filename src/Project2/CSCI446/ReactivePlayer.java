@@ -10,7 +10,7 @@ import Exceptions.OutOfArrowsException;
 public class ReactivePlayer extends Player{
 	Random random;
 
-	ReactivePlayer(Room currentRoom, World ourWorld, int numberOfArrows){
+	ReactivePlayer(int numberOfArrows, Room currentRoom, World ourWorld){
 		this.currentRoom = currentRoom;
 		world = ourWorld;
 		arrowCount = numberOfArrows;

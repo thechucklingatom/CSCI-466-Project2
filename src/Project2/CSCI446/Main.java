@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Random;
 
+import sun.plugin2.message.BestJREAvailableMessage;
+
 /**
  * @author thechucklingatom
  */
@@ -19,12 +21,12 @@ public class Main {
 
 
 		//change this to have a different file name.
-		PrintWriter writer = new PrintWriter("testsReasoning" + worldSize + ".csv");
+		PrintWriter writer = new PrintWriter("testsReasoningExtra" + worldSize + ".csv");
 
 		//header for the csv file
 		String header = "Player Type,Total Score,World Size,Wumpus Probability,Obstacle "
 				+ "Probability,Pit Probability,Total Deaths,Pit Deaths,Wumpus Deaths,"
-				+ "Have gold,Have gold int";
+				+ "Have gold,Have gold int,WumpusKilled,RoomsExplored";
 
 		writer.println(header);
 
@@ -34,8 +36,8 @@ public class Main {
 
 			System.out.println("iteration: " + i);
 
-			double wumpusProb = random.nextDouble(), obstacleProb = random.nextDouble(),
-					pitProb = random.nextDouble();
+			double wumpusProb = .3, obstacleProb = .3,
+					pitProb = .3;
 
 			//new generator
 			Generator generator = new Generator(worldSize, pitProb, wumpusProb, obstacleProb);
@@ -65,9 +67,10 @@ public class Main {
 			}
 
 			//format the row for the csv file
-			String toWrite = String.format("%s,%d,%d,%f,%f,%f,%d,%d,%d,%b,%d", player.getClass().getSimpleName(),
+			String toWrite = String.format("%s,%d,%d,%f,%f,%f,%d,%d,%d,%b,%d,%d,%d", player.getClass().getSimpleName(),
 					player.totalCost, worldSize, wumpusProb, obstacleProb, pitProb, player.deaths.size(),
-					pitDeaths, wumpusDeaths, player.haveGold, player.haveGold ? 1 : 0);
+					pitDeaths, wumpusDeaths, player.haveGold, player.haveGold ? 1 : 0,
+					gameWorld.wumpusesKilled,gameWorld.roomsExplored.size());
 
 			//print to the file
 			writer.println(toWrite);
