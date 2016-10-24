@@ -140,49 +140,21 @@ public class ReasoningPlayer extends Player{
                     while (keepSpiraling) {
                         for (int i = 0; i < counter; i++) {
                             if(world.canMove(direction) == null) {
-                                move(direction);
-                                currentRoom = world.move(direction);
-                                moveStack.push(Move.FORWARD);
-                                map[curX][curY].timesVisted++;
-                                List<Direction> directionsOfUnvisted = checkSurroundingRooms();
-                                if ((!map[curX][curY].visited || logic.nearUnvisited(curX, curY)) &&
-                                        (currentRoom.getPercepts().size() == 0 || currentRoom.getPercepts().contains(Percept.GLITTER))) {
-                                    boolean done = false;
-                                    /*for(Direction direction : directionsOfUnvisted){
-                                        *//*turnToFace(direction);
-                                        int[] nextRoom;
-                                        switch(world.canMove(direction) == null ? RoomType.EMPTY : world.canMove(direction)){
-                                            case OBSTACLE:
-                                                nextRoom = tempMove(direction);
-                                                map[nextRoom[0]][nextRoom[1]].tell(Truth.TRUE, RoomType.OBSTACLE);
-                                                break;
-                                            case WUMPUS:
-                                                nextRoom = tempMove(direction);
-                                                map[nextRoom[0]][nextRoom[1]].tell(Truth.TRUE, RoomType.WUMPUS);
-                                                deaths.add(RoomType.WUMPUS);
-                                                totalCost -= 1000;
-                                                break;
-                                            case PIT:
-                                                nextRoom = tempMove(direction);
-                                                map[nextRoom[0]][nextRoom[1]].tell(Truth.TRUE, RoomType.PIT);
-                                                deaths.add(RoomType.PIT);
-                                                totalCost -= 1000;
-                                                break;
-                                            default:
-                                                move(direction);
-                                                world.move(direction);
-                                                done = true;*//*
-                                        //}
-
-                                        //if(done){
-                                        //    break;
-                                        //}
-                                    }*/
-
-                                    map[curX][curY].visited = true;
-                                    keepSpiraling = false;
-                                    break;
+                                if(getTimesVisited(Move.TURNLEFT) >= getTimesVisited(Move.FORWARD)
+                                        && getTimesVisited(Move.TURNRIGHT) >= getTimesVisited(Move.FORWARD)) {
+                                    move(direction);
+                                    currentRoom = world.move(direction);
+                                    moveStack.push(Move.FORWARD);
+                                    map[curX][curY].timesVisted++;
+                                    List<Direction> directionsOfUnvisted = checkSurroundingRooms();
+                                    if ((!map[curX][curY].visited ) ||
+                                            (currentRoom.getPercepts().contains(Percept.GLITTER))) {
+                                        map[curX][curY].visited = true;
+                                        keepSpiraling = false;
+                                        break;
+                                    }
                                 }else{
+                                   break;
                                 }
                             }else{
                                 int[] nextRoom;
@@ -199,6 +171,7 @@ public class ReasoningPlayer extends Player{
                                         deaths.add(RoomType.WUMPUS);
                                         currentRoom = world.move(direction);
                                         move(direction);
+                                        moveStack.push(Move.FORWARD);
                                         map[curX][curY].timesVisted++;
                                         totalCost -= 1000;
                                         try {
@@ -219,6 +192,7 @@ public class ReasoningPlayer extends Player{
                                         break;
                                 }
 
+
                                 break;
                             }
                         }
@@ -231,6 +205,10 @@ public class ReasoningPlayer extends Player{
                             moveStack.push(Move.TURNRIGHT);
                         }
                         counter++;
+
+                        if(totalCost <= -100000){
+                            return;
+                        }
                     }
                     spiralLeft = !spiralLeft;
                 }
@@ -371,12 +349,15 @@ public class ReasoningPlayer extends Player{
             turnRight();
             totalCost++;
             return map[temp[0]][temp[1]].timesVisted;
-        }else{
+        }else if(move == Move.TURNRIGHT){
             turnRight();
             totalCost++;
             int[] temp = tempMove(direction);
             turnLeft();
             totalCost++;
+            return map[temp[0]][temp[1]].timesVisted;
+        }else{
+            int[] temp = tempMove(direction);
             return map[temp[0]][temp[1]].timesVisted;
         }
     }

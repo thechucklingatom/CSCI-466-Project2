@@ -15,7 +15,7 @@ public class Main {
 		Random random = new Random();
 
 		//change this value to generate different world sizes
-		int worldSize = 5;
+		int worldSize = 25;
 
 
 		//change this to have a different file name.
@@ -29,13 +29,13 @@ public class Main {
 		writer.println(header);
 
 		//run 1000 tests to see how they work, and the averages
-		for(int i = 0; i < 5; i++) {
+		for(int i = 0; i < 1000; i++) {
 			//random probability for each world
 
 			System.out.println("iteration: " + i);
 
-			double wumpusProb = .3, obstacleProb = .3,
-					pitProb = .3;
+			double wumpusProb = random.nextDouble(), obstacleProb = random.nextDouble(),
+					pitProb = random.nextDouble();
 
 			//new generator
 			Generator generator = new Generator(worldSize, pitProb, wumpusProb, obstacleProb);
