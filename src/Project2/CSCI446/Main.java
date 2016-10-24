@@ -29,7 +29,7 @@ public class Main {
 		writer.println(header);
 
 		//run 1000 tests to see how they work, and the averages
-		for(int i = 0; i < 5; i++) {
+		for(int i = 0; i < 1000; i++) {
 			//random probability for each world
 
 			System.out.println("iteration: " + i);
