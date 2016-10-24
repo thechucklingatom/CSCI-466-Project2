@@ -31,6 +31,9 @@ public class Main {
 		//run 1000 tests to see how they work, and the averages
 		for(int i = 0; i < 5; i++) {
 			//random probability for each world
+
+			System.out.println("iteration: " + i);
+
 			double wumpusProb = .3, obstacleProb = .3,
 					pitProb = .3;
 

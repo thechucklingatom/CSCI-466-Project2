@@ -4,6 +4,7 @@ import Exceptions.OutOfArrowsException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Stack;
 
 /**
@@ -17,6 +18,7 @@ public class ReasoningPlayer extends Player{
     private List<Percept> currentPercept;
     private boolean solved = false;
     private Stack<Move> moveStack;
+    private boolean spiralLeft = true;
 
     public ReasoningPlayer(int numArrows, Room inRoom, World theWorld){
         arrowCount = numArrows;
@@ -118,6 +120,7 @@ public class ReasoningPlayer extends Player{
                     moveStack.push(Move.TURNLEFT);
                     if (!checkForward()) {
                         turnLeft();
+                        moveStack.push(Move.TURNLEFT);
                         if(!checkForward()) {
                             hasMoved = false;
                         }
@@ -134,17 +137,19 @@ public class ReasoningPlayer extends Player{
                 } else {
                     int counter = 0;
                     boolean keepSpiraling = true;
-                    while (counter < map.length && keepSpiraling) {
+                    while (keepSpiraling) {
                         for (int i = 0; i < counter; i++) {
                             if(world.canMove(direction) == null) {
                                 move(direction);
                                 currentRoom = world.move(direction);
                                 moveStack.push(Move.FORWARD);
+                                map[curX][curY].timesVisted++;
                                 List<Direction> directionsOfUnvisted = checkSurroundingRooms();
-                                if (map[curX][curY].visited) {
+                                if ((!map[curX][curY].visited || logic.nearUnvisited(curX, curY)) &&
+                                        (currentRoom.getPercepts().size() == 0 || currentRoom.getPercepts().contains(Percept.GLITTER))) {
                                     boolean done = false;
-                                    for(Direction direction : directionsOfUnvisted){
-                                        /*turnToFace(direction);
+                                    /*for(Direction direction : directionsOfUnvisted){
+                                        *//*turnToFace(direction);
                                         int[] nextRoom;
                                         switch(world.canMove(direction) == null ? RoomType.EMPTY : world.canMove(direction)){
                                             case OBSTACLE:
@@ -166,26 +171,68 @@ public class ReasoningPlayer extends Player{
                                             default:
                                                 move(direction);
                                                 world.move(direction);
-                                                done = true;*/
+                                                done = true;*//*
                                         //}
 
                                         //if(done){
                                         //    break;
                                         //}
-                                    }
+                                    }*/
+
+                                    map[curX][curY].visited = true;
                                     keepSpiraling = false;
                                     break;
                                 }else{
-                                    map[curX][curY].visited = true;
-                                    break;
                                 }
+                            }else{
+                                int[] nextRoom;
+                                switch(world.canMove(direction) == null ? RoomType.EMPTY : world.canMove(direction)){
+                                    case OBSTACLE:
+                                        nextRoom = tempMove(direction);
+                                        map[nextRoom[0]][nextRoom[1]].tell(Truth.TRUE, RoomType.OBSTACLE);
+                                        map[nextRoom[0]][nextRoom[1]].visited = true;
+                                        map[nextRoom[0]][nextRoom[1]].timesVisted++;
+                                        break;
+                                    case WUMPUS:
+                                        nextRoom = tempMove(direction);
+                                        map[nextRoom[0]][nextRoom[1]].tell(Truth.TRUE, RoomType.WUMPUS);
+                                        deaths.add(RoomType.WUMPUS);
+                                        currentRoom = world.move(direction);
+                                        move(direction);
+                                        map[curX][curY].timesVisted++;
+                                        totalCost -= 1000;
+                                        try {
+                                            success = shoot();
+                                        } catch (OutOfArrowsException e) {
+                                        }
+                                        arrowCount--;
+                                        if (success == Percept.SCREAM) {
+                                            logic.inferDeadWumpus();
+                                        }
+                                        break;
+                                    case PIT:
+                                        nextRoom = tempMove(direction);
+                                        map[nextRoom[0]][nextRoom[1]].tell(Truth.TRUE, RoomType.PIT);
+                                        map[nextRoom[0]][nextRoom[1]].timesVisted++;
+                                        deaths.add(RoomType.PIT);
+                                        totalCost -= 1000;
+                                        break;
+                                }
+
+                                break;
                             }
                         }
 
-                        turnLeft();
-                        moveStack.push(Move.TURNLEFT);
+                        if(getTimesVisited(Move.TURNLEFT) <= getTimesVisited(Move.TURNRIGHT)) {
+                            turnLeft();
+                            moveStack.push(Move.TURNLEFT);
+                        }else{
+                            turnRight();
+                            moveStack.push(Move.TURNRIGHT);
+                        }
                         counter++;
                     }
+                    spiralLeft = !spiralLeft;
                 }
             }
         } while (haveGold == false); //end of loop
@@ -313,6 +360,24 @@ public class ReasoningPlayer extends Player{
         while(direction != this.direction){
             turnLeft();
             moveStack.push(Move.TURNLEFT);
+        }
+    }
+
+    public int getTimesVisited(Move move){
+        if(move == Move.TURNLEFT){
+            turnLeft();
+            totalCost++;
+            int[] temp = tempMove(direction);
+            turnRight();
+            totalCost++;
+            return map[temp[0]][temp[1]].timesVisted;
+        }else{
+            turnRight();
+            totalCost++;
+            int[] temp = tempMove(direction);
+            turnLeft();
+            totalCost++;
+            return map[temp[0]][temp[1]].timesVisted;
         }
     }
 }
