@@ -11,6 +11,7 @@ public class KnowledgeBase {
     private Truth obstacle = Truth.MAYBE;
     private Truth empty = Truth.MAYBE;
     protected boolean visited = false;
+    public int timesVisted = 0;
 
     public KnowledgeBase(){
 

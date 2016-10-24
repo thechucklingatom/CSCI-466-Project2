@@ -14,9 +14,9 @@ public class InferenceEngine {
     //we are looking at an adjacent square when we call this method
     public void update(KnowledgeBase base, Percept percept){
         //if breeze/stink are false:
-            //get predicate that is related to percept
-            //call ask(p)
-            //if return is MAYBE, tell(F, p)
+        //get predicate that is related to percept
+        //call ask(p)
+        //if return is MAYBE, tell(F, p)
         if(percept == Percept.SMELLY){
             Truth answer = base.ask(RoomType.WUMPUS);
             if(answer == Truth.MAYBE){
@@ -29,7 +29,6 @@ public class InferenceEngine {
                 base.tell(Truth.FALSE, RoomType.PIT);
             }
         }
-
     }
 
     /**
@@ -183,8 +182,8 @@ public class InferenceEngine {
                 tempYWumpus = y;    // this is the dead wumpus location(y)
                 return true;    // break out of this loop
             } else if(map[x][y].ask(RoomType.OBSTACLE) == Truth.FALSE || // we will definitely hit an obstacle this way
-                      map[x][y].ask(RoomType.OBSTACLE) == Truth.MAYBE || // we might hit an obstacle here or ...
-                      map[x][y].ask(RoomType.WUMPUS) == Truth.MAYBE){   // we might hit a wumpus, we might not
+                    map[x][y].ask(RoomType.OBSTACLE) == Truth.MAYBE || // we might hit an obstacle here or ...
+                    map[x][y].ask(RoomType.WUMPUS) == Truth.MAYBE){   // we might hit a wumpus, we might not
                 return false; // since this arrow isn't certain, we can't shoot the wumpus
             }
         }
@@ -198,10 +197,10 @@ public class InferenceEngine {
      */
     public boolean nearUnvisited(int x, int y) {
         // check the adjacent squares for possible unvisited and safe Rooms
-        return (map[x][y+1].visited && isSafe(x, y, Direction.NORTH)) ||
-                (map[x+1][y].visited && isSafe(x, y, Direction.EAST)) ||
-                (map[x][y-1].visited && isSafe(x, y, Direction.SOUTH)) ||
-                (map[x-1][y].visited && isSafe(x, y, Direction.WEST));
+        return (!map[x][y+1].visited && isSafe(x, y, Direction.NORTH)) ||
+                (!map[x+1][y].visited && isSafe(x, y, Direction.EAST)) ||
+                (!map[x][y-1].visited && isSafe(x, y, Direction.SOUTH)) ||
+                (!map[x-1][y].visited && isSafe(x, y, Direction.WEST));
     }
 
     /**
