@@ -93,11 +93,12 @@ public class Generator {
         world[xPos][yPos].addPercept(Percept.GLITTER);
 
         // randomly select a start point for the Explorer
+        List<Room> visited = new ArrayList<Room>(); // used to prevent infinite recursion in hasValidPath
         do {
             xPos = rng.nextInt(worldSize);
             yPos = rng.nextInt(worldSize);
             currentType = world[xPos][yPos].getType();
-        } while (currentType != RoomType.EMPTY && !hasValidPath(xPos, yPos));
+        } while (currentType != RoomType.EMPTY && !hasValidPath(xPos, yPos, visited));
 
         // set start point as an integer
         startPoint = xPos * (worldSize + 1) + yPos;
@@ -111,24 +112,27 @@ public class Generator {
         return startPoint % (worldSize + 1);
     }
 
-    private boolean hasValidPath(int x, int y) {
+    private boolean hasValidPath(int x, int y, List<Room> visited) {
         if (world[x][y].getType() == RoomType.GOLD) {
             return true;
-        } else if (world[x][y].getType() != RoomType.EMPTY) {
+        } else if (world[x][y].getType() != RoomType.EMPTY && world[x][y].getType() != RoomType.WUMPUS) {
+            return false;
+        } else if (visited.contains(world[x][y])) {
             return false;
         } else {
+            visited.add(world[x][y]);
             boolean lRoom = false, rRoom = false, uRoom = false, dRoom = false;
             if (x > 0) {
-                lRoom = hasValidPath(x-1, y);
+                lRoom = hasValidPath(x-1, y, visited);
             }
             if (x + 1 < worldSize) {
-                rRoom = hasValidPath(x+1, y);
+                rRoom = hasValidPath(x+1, y, visited);
             }
             if (y > 0) {
-                dRoom = hasValidPath(x, y-1);
+                dRoom = hasValidPath(x, y-1, visited);
             }
             if (y + 1 < worldSize) {
-                uRoom = hasValidPath(x, y+1);
+                uRoom = hasValidPath(x, y+1, visited);
             }
 
             return lRoom || rRoom || uRoom || dRoom;
