@@ -205,6 +205,10 @@ public class ReasoningPlayer extends Player{
                             moveStack.push(Move.TURNRIGHT);
                         }
                         counter++;
+
+                        if(totalCost <= -100000){
+                            return;
+                        }
                     }
                     spiralLeft = !spiralLeft;
                 }

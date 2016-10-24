@@ -15,7 +15,7 @@ public class Main {
 		Random random = new Random();
 
 		//change this value to generate different world sizes
-		int worldSize = 5;
+		int worldSize = 25;
 
 
 		//change this to have a different file name.
@@ -34,8 +34,8 @@ public class Main {
 
 			System.out.println("iteration: " + i);
 
-			double wumpusProb = .3, obstacleProb = .3,
-					pitProb = .3;
+			double wumpusProb = random.nextDouble(), obstacleProb = random.nextDouble(),
+					pitProb = random.nextDouble();
 
 			//new generator
 			Generator generator = new Generator(worldSize, pitProb, wumpusProb, obstacleProb);
