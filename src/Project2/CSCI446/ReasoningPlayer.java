@@ -137,16 +137,21 @@ public class ReasoningPlayer extends Player{
                 } else {
                     int counter = 0;
                     boolean keepSpiraling = true;
+                    //if something is not found
                     while (keepSpiraling) {
                         for (int i = 0; i < counter; i++) {
+                            //check if you can move
                             if(world.canMove(direction) == null) {
+                                //prioritize less visited paths to keep from looping
                                 if(getTimesVisited(Move.TURNLEFT) >= getTimesVisited(Move.FORWARD)
                                         && getTimesVisited(Move.TURNRIGHT) >= getTimesVisited(Move.FORWARD)) {
+                                    //move down the path
                                     move(direction);
                                     currentRoom = world.move(direction);
                                     moveStack.push(Move.FORWARD);
                                     map[curX][curY].timesVisted++;
-                                    List<Direction> directionsOfUnvisted = checkSurroundingRooms();
+                                    //if the room you are is is unvisited or has the gold, break
+                                    //from the loop and let the reasoning take back over again.
                                     if ((!map[curX][curY].visited ) ||
                                             (currentRoom.getPercepts().contains(Percept.GLITTER))) {
                                         map[curX][curY].visited = true;
@@ -157,15 +162,20 @@ public class ReasoningPlayer extends Player{
                                    break;
                                 }
                             }else{
+                                //if you cant move you either bumped or died, but thats what happens
+                                //when you take risks
                                 int[] nextRoom;
                                 switch(world.canMove(direction) == null ? RoomType.EMPTY : world.canMove(direction)){
                                     case OBSTACLE:
+                                        //you bump so set it to an obstacle
                                         nextRoom = tempMove(direction);
                                         map[nextRoom[0]][nextRoom[1]].tell(Truth.TRUE, RoomType.OBSTACLE);
                                         map[nextRoom[0]][nextRoom[1]].visited = true;
                                         map[nextRoom[0]][nextRoom[1]].timesVisted++;
                                         break;
                                     case WUMPUS:
+                                        //dead to wumpus, but hey, you are sure now, so kill it.
+                                        //and then move there.
                                         nextRoom = tempMove(direction);
                                         map[nextRoom[0]][nextRoom[1]].tell(Truth.TRUE, RoomType.WUMPUS);
                                         deaths.add(RoomType.WUMPUS);
@@ -184,6 +194,7 @@ public class ReasoningPlayer extends Player{
                                         }
                                         break;
                                     case PIT:
+                                        //dead to pit, mark it as pit and move on.
                                         nextRoom = tempMove(direction);
                                         map[nextRoom[0]][nextRoom[1]].tell(Truth.TRUE, RoomType.PIT);
                                         map[nextRoom[0]][nextRoom[1]].timesVisted++;
@@ -192,11 +203,12 @@ public class ReasoningPlayer extends Player{
                                         break;
                                 }
 
-
+                                //break so you dont run into it over and over again
                                 break;
                             }
                         }
 
+                        //prioritize the less visited path
                         if(getTimesVisited(Move.TURNLEFT) <= getTimesVisited(Move.TURNRIGHT)) {
                             turnLeft();
                             moveStack.push(Move.TURNLEFT);
@@ -204,37 +216,18 @@ public class ReasoningPlayer extends Player{
                             turnRight();
                             moveStack.push(Move.TURNRIGHT);
                         }
+
+                        //keep track
                         counter++;
 
+                        //death limit, just in case there is an unsolvable game.
                         if(totalCost <= -100000){
                             return;
                         }
                     }
-                    spiralLeft = !spiralLeft;
                 }
             }
         } while (haveGold == false); //end of loop
-    }
-
-    public List<Direction> checkSurroundingRooms(){
-        ArrayList<Direction> toReturn = new ArrayList();
-         if(!map[curX + 1][curY].visited){
-             toReturn.add(Direction.EAST);
-         }
-
-         if(!map[curX - 1][curY].visited){
-             toReturn.add(Direction.WEST);
-         }
-
-         if(!map[curX][curY - 1].visited){
-             toReturn.add(Direction.SOUTH);
-         }
-
-         if(!map[curX][curY + 1].visited){
-             toReturn.add(Direction.NORTH);
-         }
-
-        return toReturn;
     }
 
     public void move(Direction d){
@@ -332,13 +325,6 @@ public class ReasoningPlayer extends Player{
     @Override
     public Percept shoot() throws OutOfArrowsException {
         return world.shoot(direction);
-    }
-
-    public void turnToFace(Direction direction){
-        while(direction != this.direction){
-            turnLeft();
-            moveStack.push(Move.TURNLEFT);
-        }
     }
 
     public int getTimesVisited(Move move){
