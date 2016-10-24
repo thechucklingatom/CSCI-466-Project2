@@ -181,7 +181,7 @@ public class InferenceEngine {
                 tempXWumpus = x;    // this is the dead wumpus location(x)
                 tempYWumpus = y;    // this is the dead wumpus location(y)
                 return true;    // break out of this loop
-            } else if(map[x][y].ask(RoomType.OBSTACLE) == Truth.FALSE || // we will definitely hit an obstacle this way
+            } else if(map[x][y].ask(RoomType.OBSTACLE) == Truth.TRUE || // we will definitely hit an obstacle this way
                     map[x][y].ask(RoomType.OBSTACLE) == Truth.MAYBE || // we might hit an obstacle here or ...
                     map[x][y].ask(RoomType.WUMPUS) == Truth.MAYBE){   // we might hit a wumpus, we might not
                 return false; // since this arrow isn't certain, we can't shoot the wumpus
